@@ -1,4 +1,4 @@
-package com.mertadali.sendapp.ui.theme
+package com.mertadali.sendapp.presentation.ui.theme
 
 import android.app.Activity
 import android.os.Build
