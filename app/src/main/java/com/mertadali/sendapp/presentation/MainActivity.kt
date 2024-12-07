@@ -11,7 +11,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mertadali.sendapp.presentation.ui.theme.SendAppTheme
 import com.mertadali.sendapp.presentation.welcome.WelcomeScreen
-import dagger.hilt.android.AndroidEntryPoint
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,10 +22,10 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavHost(
                         navController = navController, startDestination = Screen.WelcomeScreen.route) {
+
                         composable(route = Screen.WelcomeScreen.route) {
                             // Welcome Screen
                             WelcomeScreen(navController = navController)
-
                         }
                         composable(route = Screen.LoginScreen.route) {
                             // Login Screen
