@@ -62,8 +62,8 @@ fun WelcomeScreen(navController: NavController) {
                textAlign = TextAlign.Center,
                 color = Color.White,
                 fontWeight = FontWeight.Bold,
-                fontStyle = FontStyle.Normal,
-                fontFamily = FontFamily.Default,
+                fontStyle = FontStyle.Italic,
+                fontFamily = FontFamily.Serif,
                 fontSize = 49.sp,
                 lineHeight = 54.sp
 
@@ -86,7 +86,7 @@ fun WelcomeScreen(navController: NavController) {
             )
 
 
-            Spacer(modifier = Modifier.padding(vertical = 190.dp))
+            Spacer(modifier = Modifier.padding(vertical = 150.dp))
 
 
             Column(
@@ -99,7 +99,7 @@ fun WelcomeScreen(navController: NavController) {
 
                     Button(
                         onClick = { navController.navigate(route = "login_screen") },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp)
                     ) {
                         Text(
                             text = "Login",
@@ -113,7 +113,7 @@ fun WelcomeScreen(navController: NavController) {
                 Row (modifier = Modifier.fillMaxWidth()){
                     Button(
                         onClick = { navController.navigate(route = "signup_screen") },
-                        modifier = Modifier.fillMaxWidth()) {
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp)) {
                         Text(
                             text = "Sign Up",
                             style = TextStyle(color = Color.Black, fontSize = 16.sp),

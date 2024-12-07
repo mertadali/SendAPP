@@ -10,16 +10,18 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
+
 private val DarkColorScheme = darkColorScheme(
     primary = WelcomeBtn,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    secondary = signUpText,
+    tertiary = DarkBlueButton
+
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = WelcomeBtn,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+    secondary = signUpText,
+    tertiary = DarkBlueButton
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
