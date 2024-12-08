@@ -12,14 +12,14 @@ import androidx.compose.ui.platform.LocalContext
 
 
 private val DarkColorScheme = darkColorScheme(
-    primary = WelcomeBtn,
+    primary = DarkBlueButton,
     secondary = signUpText,
     tertiary = DarkBlueButton
 
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = WelcomeBtn,
+    primary = DarkBlueButton,
     secondary = signUpText,
     tertiary = DarkBlueButton
 

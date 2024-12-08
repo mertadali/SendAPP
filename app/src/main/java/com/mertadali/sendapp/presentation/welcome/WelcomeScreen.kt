@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -99,7 +101,7 @@ fun WelcomeScreen(navController: NavController) {
 
                     Button(
                         onClick = { navController.navigate(route = "login_screen") },
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp)
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp), colors = ButtonDefaults.buttonColors(containerColor = Color.White)
                     ) {
                         Text(
                             text = "Login",
@@ -113,7 +115,8 @@ fun WelcomeScreen(navController: NavController) {
                 Row (modifier = Modifier.fillMaxWidth()){
                     Button(
                         onClick = { navController.navigate(route = "signup_screen") },
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp)) {
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp), colors = ButtonDefaults.buttonColors(containerColor = Color.White)
+                    ) {
                         Text(
                             text = "Sign Up",
                             style = TextStyle(color = Color.Black, fontSize = 16.sp),

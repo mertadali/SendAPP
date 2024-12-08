@@ -9,7 +9,6 @@ import androidx.compose.material3.Surface
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.mertadali.sendapp.presentation.forgot.ForgotScreen
 import com.mertadali.sendapp.presentation.login.LoginScreen
 import com.mertadali.sendapp.presentation.ui.theme.SendAppTheme
 import com.mertadali.sendapp.presentation.welcome.WelcomeScreen
