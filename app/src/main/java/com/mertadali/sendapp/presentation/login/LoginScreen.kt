@@ -69,7 +69,7 @@ fun LoginScreen(navController: NavController){
 
         Column(modifier = Modifier
             .fillMaxHeight()
-            .padding(vertical = 19.dp, horizontal = 5.dp)
+            .padding(vertical = 29.dp, horizontal = 5.dp)
             .align(alignment = Alignment.Center)
             .alpha(0.94f),
            horizontalAlignment = Alignment.CenterHorizontally) {
@@ -110,7 +110,7 @@ fun LoginScreen(navController: NavController){
                     modifier = Modifier
                         .fillMaxHeight()
                         .background(color = Color.White)
-                        .padding(horizontal = 30.dp, vertical = 8.dp)
+                        .padding(horizontal = 30.dp, vertical = 12.dp)
                 ) {
                     Text(
                         text = "Login",
@@ -194,7 +194,7 @@ fun SpecialTextField(hint: String){
         modifier = Modifier
             .fillMaxWidth()
             .shadow(6.dp, RectangleShape)
-            .height(49.dp)
+            .height(51.dp)
             .onFocusChanged {
                 // kullanıcı tıkladıysa hint gözükmesin istiyoruz
                 isHintDisplayed = it.isFocused != true && text.isEmpty()
@@ -240,7 +240,7 @@ fun SpecialPasswordText(hint: String){
         modifier = Modifier
             .fillMaxWidth()
             .shadow(6.dp, RectangleShape)
-            .height(49.dp)
+            .height(51.dp)
             .onFocusChanged {
                 // kullanıcı tıkladıysa hint gözükmesin istiyoruz
                 isHintDisplayed = it.isFocused != true && text.isEmpty()
@@ -287,7 +287,7 @@ fun LoginButton(onClick: () -> Unit){
         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
         shape = RoundedCornerShape(2.dp)
     ) {
-        Text(text ="Login", color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.SemiBold )
+        Text(text ="Login", color = Color.White, fontSize = 15.sp, fontWeight = FontWeight.SemiBold )
 
     }
 
@@ -334,7 +334,7 @@ fun GoogleSignInButton( onClick: () -> Unit){
              colors = ButtonDefaults.buttonColors(containerColor = Color.White),
              modifier = Modifier
                  .fillMaxWidth()
-                 .height(48.dp)
+                 .height(55.dp)
                  .padding(horizontal = 42.dp),
              shape = RoundedCornerShape(6.dp)) {
              Image(

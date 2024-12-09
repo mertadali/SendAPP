@@ -72,7 +72,7 @@ fun SignUpScreen(navController: NavController){
 
         Column(modifier = Modifier
             .fillMaxHeight()
-            .padding(vertical = 19.dp, horizontal = 5.dp)
+            .padding(vertical = 39.dp, horizontal = 5.dp)
             .align(alignment = Alignment.Center)
             .alpha(0.94f),
             horizontalAlignment = Alignment.CenterHorizontally) {
@@ -89,7 +89,7 @@ fun SignUpScreen(navController: NavController){
                     modifier = Modifier
                         .fillMaxHeight()
                         .background(color = Color.White)
-                        .padding(horizontal = 30.dp, vertical = 8.dp)
+                        .padding(horizontal = 30.dp, vertical = 18.dp)
                 ) {
                     Text(
                         text = "Sign Up",

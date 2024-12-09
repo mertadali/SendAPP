@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -71,8 +70,6 @@ fun WelcomeScreen(navController: NavController) {
 
             )
 
-
-
             Spacer(modifier = Modifier.padding(9.dp))
 
             Text(
@@ -94,32 +91,33 @@ fun WelcomeScreen(navController: NavController) {
             Column(
                 modifier = Modifier
                     .padding(20.dp)
-                    .align(alignment = Alignment.CenterHorizontally)
+                    .align(alignment =Alignment.CenterHorizontally)
                     .fillMaxWidth()
+                    .align(alignment = Alignment.End)
             ) {
                 Row(modifier = Modifier.fillMaxWidth()) {
 
                     Button(
                         onClick = { navController.navigate(route = "login_screen") },
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp), colors = ButtonDefaults.buttonColors(containerColor = Color.White)
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 13.dp), colors = ButtonDefaults.buttonColors(containerColor = Color.White)
                     ) {
                         Text(
                             text = "Login",
-                            style = TextStyle(color = Color.Black, fontSize = 16.sp),
+                            style = TextStyle(color = Color.Black, fontSize = 17.sp),
                             fontWeight = FontWeight.Bold
                         )
                     }
                 }
-                Spacer(modifier = Modifier.padding(5.dp))
+                Spacer(modifier = Modifier.padding(8.dp))
 
                 Row (modifier = Modifier.fillMaxWidth()){
                     Button(
                         onClick = { navController.navigate(route = "signup_screen") },
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp), colors = ButtonDefaults.buttonColors(containerColor = Color.White)
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 13.dp), colors = ButtonDefaults.buttonColors(containerColor = Color.White)
                     ) {
                         Text(
                             text = "Sign Up",
-                            style = TextStyle(color = Color.Black, fontSize = 16.sp),
+                            style = TextStyle(color = Color.Black, fontSize = 17.sp),
                             fontWeight = FontWeight.Bold)
                     }
                 }
