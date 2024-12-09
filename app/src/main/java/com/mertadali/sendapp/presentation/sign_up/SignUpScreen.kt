@@ -1,4 +1,4 @@
-package com.mertadali.sendapp.presentation.login
+package com.mertadali.sendapp.presentation.sign_up
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -13,7 +13,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -21,6 +25,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -41,8 +46,6 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
@@ -53,15 +56,15 @@ import androidx.navigation.NavController
 import com.mertadali.sendapp.R
 
 @Composable
-fun LoginScreen(navController: NavController){
+fun SignUpScreen(navController: NavController){
     val backgroundImage = painterResource(id = R.drawable.background3)
     // val underLogo = painterResource(id = R.drawable.logo3)
 
 
     Box(modifier = Modifier
         .fillMaxSize()
-       ){
-        
+    ){
+
         Image(painter = backgroundImage,
             contentDescription = "background",
             modifier = Modifier.fillMaxSize(),
@@ -72,37 +75,13 @@ fun LoginScreen(navController: NavController){
             .padding(vertical = 19.dp, horizontal = 5.dp)
             .align(alignment = Alignment.Center)
             .alpha(0.94f),
-           horizontalAlignment = Alignment.CenterHorizontally) {
-
-
-            Text(
-                text = "Welcome",
-                textAlign = TextAlign.Center,
-                fontSize = 43.sp,
-                fontWeight = FontWeight.Bold,
-                fontStyle = FontStyle.Italic,
-                fontFamily = FontFamily.Cursive
-            )
-
-            Spacer(modifier = Modifier.padding(3.dp))
-
-            Text(
-                text = "to the",
-                textAlign = TextAlign.Center,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.SemiBold,
-                fontStyle = FontStyle.Normal,
-                fontFamily = FontFamily.Cursive
-            )
-
-
-            Spacer(modifier = Modifier.padding(vertical = 5.dp))
+            horizontalAlignment = Alignment.CenterHorizontally) {
 
             Card(
                 modifier = Modifier
                     .padding(10.dp)
                     .fillMaxSize(),
-                    shape = RoundedCornerShape(46.dp),
+                shape = RoundedCornerShape(46.dp),
                 elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
             ) {
 
@@ -113,13 +92,24 @@ fun LoginScreen(navController: NavController){
                         .padding(horizontal = 30.dp, vertical = 8.dp)
                 ) {
                     Text(
-                        text = "Login",
+                        text = "Sign Up",
                         modifier = Modifier.padding(7.dp),
                         color = MaterialTheme.colorScheme.tertiary,
                         textAlign = TextAlign.Left,
                         fontSize = 26.sp,
                         fontWeight = FontWeight.Bold
                     )
+
+
+                    Text(
+                        text = "Full Name",
+                        modifier = Modifier.padding(7.dp),
+                        color = Color.Black,
+                        textAlign = TextAlign.Left,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    SpecialTextField(hint = "Mert Adalı")
 
 
                     Text(
@@ -130,7 +120,7 @@ fun LoginScreen(navController: NavController){
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold
                     )
-                    SpecialTextField(hint = "Enter your Email")
+                    SpecialTextField(hint = "deneme@gmail.com")
 
 
                     Text(
@@ -141,33 +131,27 @@ fun LoginScreen(navController: NavController){
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold
                     )
-                    SpecialPasswordText(hint = "Enter Your Password")
+                    SpecialPasswordText(hint ="Password")
 
                     Spacer(modifier = Modifier.padding(2.dp))
 
 
-                    SpecialForgotPassword(onClick = { navController.navigate("forgot_screen") })
+                    PasswordCondition()
 
+                    PrivacyPolicy(onClick = { /*TODO*/ })
 
-                    CheckBoxLoggedIn()
+                    SignUpButton(onClick = { navController.navigate("login_screen") })
 
-                    LoginButton(onClick = { navController.navigate("login_screen") })
+                    OrSignUpWith()
 
-                    OrLoginWith()
-                    
-                    GoogleSignInButton(onClick = { /*TODO*/ })
+                    GoogleSignUpButton(onClick = { /*TODO*/ })
 
                     AskAccount(onClick = { /*TODO*/})
-
-
-                    
-
-
 
                 }
             }
         }
-   }
+    }
 }
 
 @Composable
@@ -194,7 +178,7 @@ fun SpecialTextField(hint: String){
         modifier = Modifier
             .fillMaxWidth()
             .shadow(6.dp, RectangleShape)
-            .height(49.dp)
+            .height(51.dp)
             .onFocusChanged {
                 // kullanıcı tıkladıysa hint gözükmesin istiyoruz
                 isHintDisplayed = it.isFocused != true && text.isEmpty()
@@ -204,17 +188,6 @@ fun SpecialTextField(hint: String){
 
 }
 
-@Composable
-fun SpecialForgotPassword(onClick : () -> Unit){
-    Text(
-        text = "Forget password?",
-        Modifier
-            .clickable { onClick() }
-            .padding(vertical = 3.dp, horizontal = 7.dp),
-        color = MaterialTheme.colorScheme.secondary,
-        fontSize = 13.sp)
-    
-}
 
 @Composable
 fun SpecialPasswordText(hint: String){
@@ -240,7 +213,7 @@ fun SpecialPasswordText(hint: String){
         modifier = Modifier
             .fillMaxWidth()
             .shadow(6.dp, RectangleShape)
-            .height(49.dp)
+            .height(51.dp)
             .onFocusChanged {
                 // kullanıcı tıkladıysa hint gözükmesin istiyoruz
                 isHintDisplayed = it.isFocused != true && text.isEmpty()
@@ -248,11 +221,31 @@ fun SpecialPasswordText(hint: String){
         placeholder = { Text(hint, color = Color.Gray, fontSize = 13.sp)}// Placeholder kullanımı
 
     )
-
 }
 
 @Composable
-fun CheckBoxLoggedIn(){
+fun PasswordCondition(){
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.padding(8.dp)
+    ) {
+        Icon(
+            imageVector = Icons.Default.Info, // Info ikonu kullanılıyor
+            contentDescription = "Password Hint",
+            tint = Color.Red, // İkon rengini ayarlayabilirsiniz
+            modifier = Modifier.size(16.dp) // İkon boyutunu ayarlayın
+        )
+        Spacer(modifier = Modifier.width(4.dp)) // İkon ile metin arasında boşluk
+        Text(
+            text = "Password must be at least 6 characters.",
+            style = MaterialTheme.typography.bodyMedium,
+            color = Color.Gray
+        )
+    }
+}
+
+@Composable
+fun PrivacyPolicy(onClick: () -> Unit){
 
     var checked by remember {
         mutableStateOf(false)
@@ -271,14 +264,18 @@ fun CheckBoxLoggedIn(){
             onCheckedChange = {checked = it},
             colors = CheckboxDefaults.colors(checkedColor = Color.LightGray, uncheckedColor = Color.LightGray, checkmarkColor = Color.White))
 
-        Text(text = "Keep me logged in.", color = Color.Gray, fontSize = 13.sp)
+        Text(text = "I agree to the", color = Color.Gray, fontSize = 13.sp)
+        Spacer(modifier = Modifier.padding(horizontal = 1.dp))
+        Text(text = "privacy policy", color = MaterialTheme.colorScheme.secondary, fontSize = 13.sp,style = TextStyle(textDecoration = TextDecoration.Underline),
+            modifier = Modifier.clickable { onClick() })
+
 
     }
 
 }
 
 @Composable
-fun LoginButton(onClick: () -> Unit){
+fun SignUpButton(onClick: () -> Unit){
     Button(
         onClick = { onClick() },
         modifier = Modifier
@@ -287,14 +284,14 @@ fun LoginButton(onClick: () -> Unit){
         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
         shape = RoundedCornerShape(2.dp)
     ) {
-        Text(text ="Login", color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.SemiBold )
+        Text(text ="Create Account", color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.SemiBold )
 
     }
 
 }
 
 @Composable
-fun OrLoginWith() {
+fun OrSignUpWith() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -310,7 +307,7 @@ fun OrLoginWith() {
         )
 
         Text(
-            text = "or login with",
+            text = "or sign up with",
             color = Color.Black,
             fontSize = 14.sp,
             modifier = Modifier.padding(horizontal = 8.dp)
@@ -326,25 +323,25 @@ fun OrLoginWith() {
 }
 
 @Composable
-fun GoogleSignInButton( onClick: () -> Unit){
-     Box(contentAlignment = Alignment.Center) {
+fun GoogleSignUpButton( onClick: () -> Unit){
+    Box(contentAlignment = Alignment.Center) {
 
-         Button(
-             onClick = { onClick() },
-             colors = ButtonDefaults.buttonColors(containerColor = Color.White),
-             modifier = Modifier
-                 .fillMaxWidth()
-                 .height(48.dp)
-                 .padding(horizontal = 42.dp),
-             shape = RoundedCornerShape(6.dp)) {
-             Image(
-                 painter = painterResource(id = R.drawable.android_light_rd_s_),
-                 contentDescription = "Google Logo",
-                 modifier = Modifier
-                     .fillMaxHeight()
-                     .padding(horizontal = 16.dp))
-         }
-     }
+        Button(
+            onClick = { onClick() },
+            colors = ButtonDefaults.buttonColors(containerColor = Color.White),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp)
+                .padding(horizontal = 42.dp),
+            shape = RoundedCornerShape(6.dp)) {
+            Image(
+                painter = painterResource(id = R.drawable.android_light_rd_s_),
+                contentDescription = "Google Logo",
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .padding(horizontal = 16.dp))
+        }
+    }
 }
 
 @Composable
@@ -355,18 +352,18 @@ fun AskAccount(onClick: () -> Unit){
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally) {
 
-        Text(text = "Don't you have an account yet?",
+        Text(text = "Do you already have account?",
             color = Color.DarkGray,
             textAlign = TextAlign.Center,
             fontSize = 14.sp)
 
-        Text(text = "Sign up",
+        Text(text = "Login",
             color = Color.Blue,
             modifier = Modifier.clickable { onClick() },
             textAlign = TextAlign.Center,
             fontSize = 14.sp,
             style = TextStyle(textDecoration = TextDecoration.Underline))
-        
+
     }
 
 }

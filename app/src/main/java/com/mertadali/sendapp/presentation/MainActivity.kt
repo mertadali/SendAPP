@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mertadali.sendapp.presentation.login.LoginScreen
+import com.mertadali.sendapp.presentation.sign_up.SignUpScreen
 import com.mertadali.sendapp.presentation.ui.theme.SendAppTheme
 import com.mertadali.sendapp.presentation.welcome.WelcomeScreen
 
@@ -30,7 +31,7 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(route = Screen.LoginScreen.route) {
                             // Login Screen
-                            LoginScreen("Enter your email",navController)
+                            LoginScreen(navController)
                         }
                         composable(route = Screen.ForgotScreen.route) {
                             // Forgot Screen
@@ -38,6 +39,7 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(route = Screen.SignUpScreen.route) {
                             // SignUp Screen
+                            SignUpScreen(navController = navController)
 
                         }
                         composable(route = Screen.FeedScreen.route) {
