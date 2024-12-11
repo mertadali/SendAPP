@@ -96,6 +96,9 @@ dependencies {
     implementation ("androidx.navigation:navigation-compose:2.8.4")
     implementation ("com.google.accompanist:accompanist-flowlayout:0.28.0")
 
+    implementation ("androidx.compose.ui:ui:1.7.5")
+    implementation ("androidx.compose.material:material:1.7.5")
+
     // Retrofit
     implementation ("com.squareup.retrofit2:retrofit:2.11.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.11.0")
@@ -150,7 +153,7 @@ dependencies {
 
 
     // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:33.6.0"))
+    implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.firebase:firebase-storage")

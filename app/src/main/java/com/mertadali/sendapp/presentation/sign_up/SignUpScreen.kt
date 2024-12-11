@@ -61,6 +61,7 @@ fun SignUpScreen(navController: NavController){
     // val underLogo = painterResource(id = R.drawable.logo3)
 
 
+
     Box(modifier = Modifier
         .fillMaxSize()
     ){
@@ -138,7 +139,7 @@ fun SignUpScreen(navController: NavController){
 
                     PasswordCondition()
 
-                    PrivacyPolicy(onClick = { /*TODO*/ })
+                    PrivacyPolicy(onClick = { /*TODO*/})
 
                     SignUpButton(onClick = { navController.navigate("login_screen") })
 
@@ -147,6 +148,8 @@ fun SignUpScreen(navController: NavController){
                     GoogleSignUpButton(onClick = { /*TODO*/ })
 
                     AskAccount(onClick = { /*TODO*/})
+
+
 
                 }
             }
@@ -273,6 +276,7 @@ fun PrivacyPolicy(onClick: () -> Unit){
     }
 
 }
+
 
 @Composable
 fun SignUpButton(onClick: () -> Unit){

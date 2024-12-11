@@ -55,8 +55,6 @@ import com.mertadali.sendapp.R
 @Composable
 fun LoginScreen(navController: NavController){
     val backgroundImage = painterResource(id = R.drawable.background3)
-    // val underLogo = painterResource(id = R.drawable.logo3)
-
 
     Box(modifier = Modifier
         .fillMaxSize()
@@ -151,7 +149,7 @@ fun LoginScreen(navController: NavController){
 
                     CheckBoxLoggedIn()
 
-                    LoginButton(onClick = { navController.navigate("login_screen") })
+                    LoginButton(onClick = { navController.navigate("feed_screen") })
 
                     OrLoginWith()
                     
@@ -213,6 +211,8 @@ fun SpecialForgotPassword(onClick : () -> Unit){
             .padding(vertical = 3.dp, horizontal = 7.dp),
         color = MaterialTheme.colorScheme.secondary,
         fontSize = 13.sp)
+
+
     
 }
 
