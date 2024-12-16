@@ -15,8 +15,10 @@ sealed class Screen(val route : String ,val icon: ImageVector? = null){
     data object SignUpScreen : Screen("signup_screen")
     data object FeedScreen : Screen("feed_screen",Icons.Filled.Home)
     data object ProfileScreen : Screen("profile_screen",Icons.Filled.Person)
-    data object MyPlansScreen : Screen("myPlans_screen", Icons.AutoMirrored.Filled.List)
-    data object AddPlansScreen : Screen("addPlans_screen",Icons.Filled.Add)
-
+    data object MyPlansScreen : Screen("my_plans_screen", Icons.AutoMirrored.Filled.List)
+    data object AddPlansScreen : Screen("add_plans_screen",Icons.Filled.Add)
 
 }
+
+
+

@@ -157,11 +157,6 @@ fun LoginScreen(navController: NavController){
 
                     AskAccount(onClick = { /*TODO*/})
 
-
-                    
-
-
-
                 }
             }
         }

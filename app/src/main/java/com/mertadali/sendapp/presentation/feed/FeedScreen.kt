@@ -10,7 +10,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -29,10 +32,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.mertadali.sendapp.presentation.FeedRow
 import com.mertadali.sendapp.presentation.Screen
 
 @Composable
 fun FeedScreen(navController: NavController) {
+
 
 
     Scaffold(
@@ -56,13 +61,16 @@ fun FeedScreen(navController: NavController) {
                 .padding(innerPadding)
         ) {
             Column {
-                SearchBar(modifier = Modifier.fillMaxWidth(), hint = "Search Name", onSearch = {
+                SearchBar(hint = "Search Name", onSearch = {
                     // viewModel.onEvent
                 })
+
 
                 // RecyclerView
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
                     // Movie ListRow yapılacak.
+
+
                 }
 
 
@@ -74,33 +82,29 @@ fun FeedScreen(navController: NavController) {
 
 
 @Composable
-fun SearchBar(modifier: Modifier, hint : String, onSearch : (String) -> Unit = {} ){
-    var text by remember {
-        mutableStateOf("")
-    }
+fun SearchBar( hint : String, onSearch : (String) -> Unit = {} ){
+    var text by remember { mutableStateOf("") }
 
-    var isHintDisplayed by remember {
-        mutableStateOf(hint != "")
-    }
+    var isHintDisplayed by remember { mutableStateOf(hint.isNotEmpty()) }
 
-    Box(modifier = modifier) {
+    Box(modifier = Modifier
+        .fillMaxWidth()) {
         TextField(value = text,
             onValueChange = { text = it },
             keyboardActions = KeyboardActions(onDone = { onSearch(text) }),
 
             maxLines = 1,
             singleLine = true,
-            textStyle = TextStyle(color = Color.Black),
+            textStyle = TextStyle(color = Color.White),
             shape = RoundedCornerShape(12.dp),
-            colors = TextFieldDefaults.colors(Color.White),
             modifier = Modifier
                 .fillMaxWidth()
                 .shadow(5.dp, CircleShape)
                 .background(color = Color.White, CircleShape)
                 .padding(horizontal = 20.dp)
-                .onFocusChanged {
+                .onFocusChanged { focusState ->
                     // kullanıcı tıkladıysa hint gözükmesin istiyoruz
-                    isHintDisplayed = it.isFocused != true && text.isEmpty()
+                    isHintDisplayed = !focusState.isFocused && text.isEmpty()
                 })
 
 
@@ -109,36 +113,53 @@ fun SearchBar(modifier: Modifier, hint : String, onSearch : (String) -> Unit = {
                 color = Color.LightGray,
                 modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp))
 
-            println(isHintDisplayed)
         }
     }
 }
 
 
 @Composable
-fun BottomNavBar(navController: NavController,items : List<Screen>){
-    NavigationBar {
+fun BottomNavBar(navController: NavController, items: List<Screen>) {
+
+    val currentRoute = navController.currentDestination?.route
+    NavigationBar{
         items.forEach { screen ->
+            val isSelected = currentRoute == screen.route
             NavigationBarItem(
-                selected = navController.currentDestination?.route == screen.route,
-                icon = { screen.icon?.let { Icon(imageVector = it, contentDescription = screen.route) } },
-                label = { Text(text = screen.route.replace("_screen","").replaceFirstChar { it.uppercase() })},
+
+                selected = isSelected,
+                icon = {
+                    Icon(
+                        imageVector = screen.icon ?: Icons.Default.Home,
+                        contentDescription = screen.route,
+                        modifier = Modifier
+                            .background(
+                                if (isSelected) MaterialTheme.colorScheme.onTertiary else Color.LightGray, // Seçili olan için yeşil arka plan
+                                CircleShape // Yuvarlak şekil
+                            )
+                            .padding(13.dp), // İkonun etrafında boşluk
+                        tint = if (isSelected) Color.Black else Color.Gray // Seçili ikonu beyaz yap, diğerini gri
+                    )
+                },
+
                 onClick = {
-                    if (navController.currentDestination?.route != screen.route){
-                        navController.navigate(screen.route){
-                            popUpTo(navController.graph.startDestinationId){
+                    if (currentRoute != screen.route) {
+                        navController.navigate(screen.route) {
+                            popUpTo(navController.graph.startDestinationId) {
                                 saveState = true
                             }
                             launchSingleTop = true
                             restoreState = true
                         }
                     }
-                })
+                }
+            )
         }
     }
-
-
 }
+
+
+
 
 
 

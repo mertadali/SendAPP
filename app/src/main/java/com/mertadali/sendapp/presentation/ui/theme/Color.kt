@@ -14,10 +14,10 @@ var DarkBlueButton = Color(0xFF000C42)
 var OrangeLogo = Color(0xFFD08313)
 var signUpText= Color(0xFF005AAE)
 var WelcomeBtn = Color(0xFFF7F5F3)
-var textColor = Color(0xFF636363)
+var textColor = Color(0xFF747575)
 var textHint = Color(0xFF707070)
 var niceGreen = Color(0xFFBCFF5E)
-var iconBarGray = Color(0xFF8C8C8E)
+var BarBackground = Color(0xFF2D2F31)
 
 
 
