@@ -128,7 +128,7 @@ fun LoginScreen(navController: NavController){
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold
                     )
-                    SpecialTextField(hint = "Enter your Email")
+                    SpecialTextField(hint = "Enter your Email", modifier = Modifier.padding(0.1.dp))
 
 
                     Text(
@@ -164,7 +164,7 @@ fun LoginScreen(navController: NavController){
 }
 
 @Composable
-fun SpecialTextField(hint: String){
+fun SpecialTextField(hint: String,modifier: Modifier){
 
     var text by remember {
         mutableStateOf("")

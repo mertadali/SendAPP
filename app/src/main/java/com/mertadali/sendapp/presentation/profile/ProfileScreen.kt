@@ -10,10 +10,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -21,8 +24,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -71,8 +72,9 @@ fun ProfileScreen(navController: NavController){
         ) {
 
             Column(modifier = Modifier
-                .padding(horizontal = 30.dp, vertical = 12.dp)
-                .fillMaxHeight()
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
                 .align(alignment = Alignment.Center)) {
 
                 val backgroundImage = painterResource(id = R.drawable.ic_launcher_background)
@@ -82,61 +84,64 @@ fun ProfileScreen(navController: NavController){
                     modifier = Modifier.padding(7.dp),
                     color = MaterialTheme.colorScheme.tertiary,
                     textAlign = TextAlign.Left,
-                    fontSize = 36.sp,
+                    fontSize = 27   .sp,
                     fontWeight = FontWeight.Bold
                 )
 
+                Box(modifier = Modifier.padding(vertical = 11.dp).fillMaxWidth(), contentAlignment = Alignment.Center){
+                    Image(
+                        painter = backgroundImage,
+                        contentDescription = null,
+                        Modifier
+                            .size(130.dp)
+                            .clip(CircleShape),
+                        contentScale = ContentScale.Crop
+                    )
+                }
 
-                Image(
-                    painter = backgroundImage,
-                    contentDescription = null,
-                    Modifier
-                        .size(140.dp, 120.dp)
-                        .clip(CircleShape)
-                        .align(alignment = Alignment.CenterHorizontally),
-                    contentScale = ContentScale.Crop
-                )
-
-                Spacer(modifier = Modifier.padding(6.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                     Text(
                         text = "Full name",
-                        modifier = Modifier.padding(7.dp),
                         color = Color.Black,
+                        modifier = Modifier.padding(7.dp),
                         textAlign = TextAlign.Left,
                         fontSize = 15.sp,
                         fontWeight = FontWeight.SemiBold
                     )
 
-                    SpecialTextField(hint = "Mert Adalı")
+                    SpecialTextField(hint = "Mert Adalı", modifier = Modifier.padding(0.1.dp))
 
-                Spacer(modifier = Modifier.padding(5.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                     Text(
                         text = "E-mail",
-                        modifier = Modifier.padding(7.dp),
                         color = Color.Black,
                         textAlign = TextAlign.Left,
+                        modifier = Modifier.padding(7.dp),
                         fontSize = 15.sp,
                         fontWeight = FontWeight.SemiBold
                     )
 
-                    SpecialTextField(hint = "mertadali605@gmail.com")
+                    SpecialTextField(hint = "mertadali605@gmail.com", modifier = Modifier.padding(0.1.dp))
 
-                Spacer(modifier = Modifier.padding(5.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                     Text(
                         text = "Job",
-                        modifier = Modifier.padding(7.dp),
                         color = Color.Black,
                         textAlign = TextAlign.Left,
+                        modifier = Modifier.padding(7.dp),
                         fontSize = 15.sp,
                         fontWeight = FontWeight.SemiBold
                     )
 
-                    SpecialTextField(hint = "Developer")
+                    SpecialTextField(hint = "Developer",
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp))
 
-                Spacer(modifier = Modifier.padding(5.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                     BirthDate()
 
@@ -163,10 +168,10 @@ fun BirthDate() {
     ) {
         Text(
             text = "Birth Date",
-            modifier = Modifier.padding(bottom = 8.dp),
+            modifier = Modifier.padding(bottom = 6.dp),
             color = Color.Black,
             fontWeight = FontWeight.SemiBold,
-            fontSize = 15.sp
+            fontSize = 13.sp
         )
 
         Card(
@@ -188,7 +193,7 @@ fun BirthDate() {
                     Image(
                         painter = painterResource(id = R.drawable.baseline_calendar_month_24), // İcon ekleyin
                         contentDescription = null,
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.size(12.dp))
                     Text(
@@ -232,7 +237,7 @@ fun SaveButton(){   // onClick: () -> Unit
     Button(
         onClick = { },
         modifier = Modifier
-            .padding(horizontal = 18.dp, vertical = 4.dp)
+            .padding(horizontal = 16.dp, vertical = 8.dp)
             .fillMaxWidth(),
         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
         shape = RoundedCornerShape(6.dp)

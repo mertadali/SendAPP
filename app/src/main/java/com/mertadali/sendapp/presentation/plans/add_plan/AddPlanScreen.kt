@@ -3,6 +3,7 @@ package com.mertadali.sendapp.presentation.plans.add_plan
 import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,10 +18,15 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Photo
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -79,7 +85,7 @@ fun AddPlanScreen(navController: NavController){
 fun AddPlan() {
     var planName by remember { mutableStateOf("") }
     var planDetails by remember { mutableStateOf("") }
-    var weatherInfo by remember { mutableStateOf("Sunny, 25°C") } // Örnek hava durumu
+    val weatherInfo by remember { mutableStateOf("Sunny, 25°C    Karşıyaka/İzmir") } // Örnek hava durumu
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
     val context = LocalContext.current
 
@@ -137,36 +143,71 @@ fun AddPlan() {
         // Plan Detayları (Maddeler)
         OutlinedTextField(
             value = planDetails,
-            onValueChange = { planDetails = it },
+            onValueChange = { planDetails = it},
             label = { Text("Plan Details (Add tasks)") },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(150.dp),
-            maxLines = 5
+            maxLines = 7
         )
 
-        // Resim Yükleme
-        Button(
-            onClick = {
-                // Resim seçme işlemi burada yapılabilir
-                Toast.makeText(context, "Image selection coming soon!", Toast.LENGTH_SHORT).show()
-            },
-            modifier = Modifier.fillMaxWidth()
+        // Resim Ekleme Kartı
+        Card(
+            shape = RoundedCornerShape(12.dp),
+            elevation = CardDefaults.cardElevation(7.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 30.dp)
+                .clickable {
+                    Toast
+                        .makeText(context, "Image selection coming soon!", Toast.LENGTH_SHORT)
+                        .show()
+                }
         ) {
-            Text(text = "Add Image")
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Photo,
+                    contentDescription = "Add Image(Optional)",
+                    tint = Color.Black,
+                    modifier = Modifier.size(32.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(text = "Add Image (Optional)", style = MaterialTheme.typography.bodyMedium)
+            }
         }
 
-        // Harita Seçimi (Buton örneği)
-        Button(
-            onClick = {
-                Toast.makeText(context, "Map selection coming soon!", Toast.LENGTH_SHORT).show()
-            },
-            modifier = Modifier.fillMaxWidth()
+        // Harita Seçimi Kartı
+        Card(
+            shape = RoundedCornerShape(12.dp),
+            elevation = CardDefaults.cardElevation(7.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 30.dp)
+                .clickable {
+                    Toast
+                        .makeText(context, "Map selection coming soon!", Toast.LENGTH_SHORT)
+                        .show()
+                }
         ) {
-            Text(text = "Select Location on Map")
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.LocationOn,
+                    contentDescription = "Select Location(Optional)",
+                    tint = Color.Black,
+                    modifier = Modifier.size(32.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(text = "Select Location on Map (Optional)", style = MaterialTheme.typography.bodyMedium)
+            }
         }
-
-        // Paylaş Butonu
         Button(
             onClick = {
                 // Paylaş işlemi
@@ -178,11 +219,13 @@ fun AddPlan() {
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 16.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF64B5F6))
+                .padding(vertical = 26.dp, horizontal = 25.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF021727))
         ) {
-            Text(text = "Share Plan", color = Color.White)
+            Text(text = "Share Plan", color = Color.White, fontSize = 15.sp, fontWeight = FontWeight.Bold)
         }
+
+
     }
 }
 
