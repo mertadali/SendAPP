@@ -24,17 +24,17 @@ class SignUpViewModel @Inject constructor(private val signUpUseCase: SignUpUseCa
             }
 
             is SignUpEvent.EnterEmail -> {
-                _state.value = _state.value.copy(email = event.email)
+                _state.value = _state.value.copy(email = event.email, errorMessage = null)
 
             }
 
             is SignUpEvent.EnterFullName -> {
-                _state.value = _state.value.copy(fullName = event.fullName)
+                _state.value = _state.value.copy(fullName = event.fullName, errorMessage = null)
 
             }
 
             is SignUpEvent.EnterPassword -> {
-                _state.value = _state.value.copy(password = event.password)
+                _state.value = _state.value.copy(password = event.password, errorMessage = null)
 
             }
 
@@ -73,7 +73,8 @@ class SignUpViewModel @Inject constructor(private val signUpUseCase: SignUpUseCa
                         _state.value = _state.value.copy(
                             isLoading = false,
                             isSignUpSuccessful = true,
-                            user = response.data.user
+                            user = response.data.user,
+                            errorMessage = null
                         )
                     }
                 }
