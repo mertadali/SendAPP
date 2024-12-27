@@ -54,6 +54,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.mertadali.sendapp.R
 
@@ -61,7 +62,6 @@ import com.mertadali.sendapp.R
 fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = hiltViewModel()){
     val backgroundImage = painterResource(id = R.drawable.background3)
 
-    val state by viewModel.state.collectAsState()
     // val underLogo = painterResource(id = R.drawable.logo3)
 
 
@@ -145,7 +145,7 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = hilt
 
                     PrivacyPolicy(onClick = { /*TODO*/})
 
-                    SignUpButton(onClick = { navController.navigate("login_screen") })
+                    SignUpButton(viewModel, state = viewModel.state.collectAsState().value)
 
                     OrSignUpWith()
 
@@ -288,16 +288,24 @@ fun PrivacyPolicy(onClick: () -> Unit){
 
 
 @Composable
-fun SignUpButton(onClick: () -> Unit){
+fun SignUpButton(viewModel: SignUpViewModel, state: SignUpState){
     Button(
-        onClick = { onClick() },
+        onClick = {
+            viewModel.onEvent(SignUpEvent.SignUpClicked) },
         modifier = Modifier
             .padding(horizontal = 13.dp, vertical = 4.dp)
             .fillMaxWidth(),
         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
         shape = RoundedCornerShape(2.dp)
     ) {
-        Text(text ="Create Account", color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.SemiBold )
+        if (!state.isLoading) {
+            Text(
+                text = "Create Account",
+                color = Color.White,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.SemiBold
+            )
+        }
 
     }
 
