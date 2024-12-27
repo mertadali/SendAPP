@@ -33,9 +33,16 @@ class LoginViewModel @Inject constructor(private val signInUseCase: SignInUseCas
                 login(_state.value.email, _state.value.password)
             }
 
-            LoginEvent.ClickForgot -> TODO()
+            LoginEvent.ClickForgot -> {
+                _state.value = _state.value.copy(isForgotPasswordClicked = true)
 
-            LoginEvent.SignGoogle -> TODO()
+            }
+
+            LoginEvent.SignGoogle -> {
+                // Google SignIn yapılacak !!
+                _state.value = _state.value.copy(isGoogleSignInClicked = true)
+
+            }
 
         }
     }
@@ -52,7 +59,7 @@ class LoginViewModel @Inject constructor(private val signInUseCase: SignInUseCas
                         _state.value = _state.value.copy(isLoading = false, errorMessage = response.message)
 
                     }
-                    Response.Loading -> {
+                   is  Response.Loading -> {
                         _state.value = _state.value.copy(isLoading = true, errorMessage = null)
                     }
                     is Response.Success -> {

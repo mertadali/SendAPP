@@ -31,6 +31,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -52,12 +53,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.mertadali.sendapp.R
 
 @Composable
-fun SignUpScreen(navController: NavController){
+fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = hiltViewModel()){
     val backgroundImage = painterResource(id = R.drawable.background3)
+
+    val state by viewModel.state.collectAsState()
     // val underLogo = painterResource(id = R.drawable.logo3)
 
 
@@ -110,7 +114,7 @@ fun SignUpScreen(navController: NavController){
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold
                     )
-                    SpecialTextField(hint = "Mert Adalı")
+                    SpecialTextField(hint = "Mert Adalı", onValueChange = { viewModel.onEvent(SignUpEvent.EnterFullName(it)) })
 
 
                     Text(
@@ -121,7 +125,7 @@ fun SignUpScreen(navController: NavController){
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold
                     )
-                    SpecialTextField(hint = "deneme@gmail.com")
+                    SpecialTextField(hint = "deneme@gmail.com", onValueChange = { viewModel.onEvent(SignUpEvent.EnterEmail(it)) })
 
 
                     Text(
@@ -132,7 +136,7 @@ fun SignUpScreen(navController: NavController){
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold
                     )
-                    SpecialPasswordText(hint ="Password")
+                    SpecialPasswordText(hint ="Password", onValueChange = { viewModel.onEvent(SignUpEvent.EnterPassword(it)) })
 
                     Spacer(modifier = Modifier.padding(2.dp))
 
@@ -158,7 +162,7 @@ fun SignUpScreen(navController: NavController){
 }
 
 @Composable
-fun SpecialTextField(hint: String){
+fun SpecialTextField(hint: String, onValueChange: (String) -> Unit){
 
     var text by remember {
         mutableStateOf("")
@@ -169,7 +173,9 @@ fun SpecialTextField(hint: String){
 
     TextField(
         value = text,
-        onValueChange = { text = it },
+        onValueChange = {
+            text = it
+            onValueChange(it) },
         maxLines = 1,
         singleLine = true,
         textStyle = TextStyle(color = Color.Black, textAlign = TextAlign.Start, fontSize = 14.sp),
@@ -193,7 +199,7 @@ fun SpecialTextField(hint: String){
 
 
 @Composable
-fun SpecialPasswordText(hint: String){
+fun SpecialPasswordText(hint: String,onValueChange: (String) -> Unit){
 
     var text by remember {
         mutableStateOf("")
@@ -204,7 +210,10 @@ fun SpecialPasswordText(hint: String){
 
     TextField(
         value = text,
-        onValueChange = { text = it },
+        onValueChange = {
+            text = it
+            onValueChange(it)
+                        },
         maxLines = 1,
         singleLine = true,
         textStyle = TextStyle(color = Color.Black, textAlign = TextAlign.Start, fontSize = 14.sp),

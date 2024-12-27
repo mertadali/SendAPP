@@ -8,5 +8,7 @@ data class LoginState(
     val isLoading : Boolean = false,
     val errorMessage : String? = null,
     val isLoggedIn : Boolean = false,
-    val user : FirebaseUser? = null
+    val user : FirebaseUser? = null,
+    val isGoogleSignInClicked : Boolean = false,      // Google SignIn yapılacak
+    val isForgotPasswordClicked : Boolean = false
     )
