@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "181469459994",
+    "project_id": "sendapp-9c5c1",
+    "storage_bucket": "sendapp-9c5c1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:181469459994:android:f4d28d75a277dc0bb003a3",
+        "android_client_info": {
+          "package_name": "com.mertadali.sendapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDaLuT1bLOFYb5N1oXAcZkyqxbniIDYJiM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

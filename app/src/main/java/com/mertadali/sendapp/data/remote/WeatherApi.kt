@@ -12,7 +12,6 @@ interface WeatherApi {
     /*
     // coord.lon Longitude of the location ,    coord.lat Latitude of the location
 
-
      */
 
     @GET("weather")

@@ -1,14 +1,12 @@
-package com.mertadali.sendapp.presentation.login
+    package com.mertadali.sendapp.presentation.login
 
-sealed class LoginEvent {
+    sealed class LoginEvent {
 
-    data class EnterEmail(val email : String) : LoginEvent()
-    data class EnterPassword(val password : String) : LoginEvent()
-    data class EnterLoggedIn(val loggedIn : Boolean) : LoginEvent()
-    data object ClickLogin : LoginEvent()
-    data object ClickForgot : LoginEvent()
-    data object SignGoogle : LoginEvent()
-
+        data class EnterEmail(val email : String) : LoginEvent()
+        data class EnterPassword(val password : String) : LoginEvent()
+        data object ClickLogin : LoginEvent()
+        data object ClickForgot : LoginEvent()
+        data object SignGoogle : LoginEvent()
 
 
 
@@ -19,4 +17,4 @@ sealed class LoginEvent {
 
 
 
-}
+    }

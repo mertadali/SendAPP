@@ -3,7 +3,6 @@
     import androidx.activity.ComponentActivity
     import androidx.activity.compose.setContent
     import androidx.activity.enableEdgeToEdge
-    import androidx.compose.material3.MaterialTheme
     import androidx.compose.material3.Surface
     import androidx.compose.ui.graphics.Color
     import androidx.navigation.compose.NavHost
@@ -17,7 +16,9 @@
     import com.mertadali.sendapp.presentation.sign_up.SignUpScreen
     import com.mertadali.sendapp.presentation.ui.theme.SendAppTheme
     import com.mertadali.sendapp.presentation.welcome.WelcomeScreen
+    import dagger.hilt.android.AndroidEntryPoint
 
+    @AndroidEntryPoint
     class MainActivity : ComponentActivity() {
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
@@ -69,9 +70,12 @@
                         }
                     }
                 }
-                }
-    }
+
+            }
         }
+    }
+
+
 
 
 

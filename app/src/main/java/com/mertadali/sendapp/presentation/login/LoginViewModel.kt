@@ -1,35 +1,64 @@
 package com.mertadali.sendapp.presentation.login
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.mertadali.sendapp.domain.use_case.SignInUseCase
+import com.mertadali.sendapp.util.Response
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
+import javax.inject.Inject
 
-class LoginViewModel() {
+@HiltViewModel
+class LoginViewModel @Inject constructor(private val signInUseCase: SignInUseCase) : ViewModel() {
 
-    private val _state = mutableStateOf(value = LoginState())
-    val state : State<LoginState> = _state
-
-
+    private val _state = MutableStateFlow(LoginState())
+    val state: StateFlow<LoginState> = _state.asStateFlow()
 
     fun onEvent(event: LoginEvent){
-
         when(event){
             is LoginEvent.EnterEmail -> {
-
-            }
-            LoginEvent.ClickForgot -> {
-
-            }
-            LoginEvent.ClickLogin -> {
-
-            }
-            is LoginEvent.EnterLoggedIn -> {
+                _state.value = _state.value.copy(email = event.email)
 
             }
             is LoginEvent.EnterPassword ->{
+                _state.value = _state.value.copy(password = event.password)
 
             }
-            LoginEvent.SignGoogle -> {
 
+
+           is  LoginEvent.ClickLogin -> {
+                login(_state.value.email, _state.value.password)
+            }
+
+            LoginEvent.ClickForgot -> TODO()
+
+            LoginEvent.SignGoogle -> TODO()
+
+        }
+    }
+
+     fun login(email : String, password : String){
+         if(email.isEmpty() || password.isEmpty()) {
+             _state.value = _state.value.copy(errorMessage = "Email or Password is empty")
+             return
+         }
+        viewModelScope.launch {
+            signInUseCase.invoke(email, password).collect{ response ->
+                when(response){
+                    is Response.Error -> {
+                        _state.value = _state.value.copy(isLoading = false, errorMessage = response.message)
+
+                    }
+                    Response.Loading -> {
+                        _state.value = _state.value.copy(isLoading = true, errorMessage = null)
+                    }
+                    is Response.Success -> {
+                        _state.value = _state.value.copy(isLoading = false, isLoggedIn = true)
+                    }
+                }
             }
         }
     }

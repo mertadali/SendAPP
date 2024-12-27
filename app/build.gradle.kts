@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
-    // id("com.google.gms.google-services")
+     id("com.google.gms.google-services")
    // id ("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 
 
@@ -87,17 +87,17 @@ dependencies {
 
     // --------- Jetpack Compose---------------
     // -> https://developer.android.com/develop/ui/compose/setup
-    val composeUiVersion = "1.7.5"
+    val composeUiVersion = "1.7.6"
     implementation ("androidx.compose.material:material-icons-core:$composeUiVersion")
     implementation ("androidx.compose.material:material-icons-extended:$composeUiVersion")
     implementation ("androidx.constraintlayout:constraintlayout-compose:1.1.0")
 
     implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
-    implementation ("androidx.navigation:navigation-compose:2.8.4")
+    implementation ("androidx.navigation:navigation-compose:2.8.5")
     implementation ("com.google.accompanist:accompanist-flowlayout:0.28.0")
 
-    implementation ("androidx.compose.ui:ui:1.7.5")
-    implementation ("androidx.compose.material:material:1.7.5")
+    implementation ("androidx.compose.ui:ui:1.7.6")
+    implementation ("androidx.compose.material:material:1.7.6")
 
     // Retrofit
     implementation ("com.squareup.retrofit2:retrofit:2.11.0")
@@ -146,21 +146,23 @@ dependencies {
     androidTestImplementation ("org.mockito:mockito-core:4.7.0")
     androidTestImplementation ("com.google.dagger:hilt-android-testing:2.51.1")
     kspAndroidTest ("com.google.dagger:hilt-android-compiler:2.51.1")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.7.5")
-    debugImplementation("androidx.compose.ui:ui-test-manifest:1.7.5")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.7.6")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.7.6")
     androidTestImplementation("com.google.firebase:firebase-messaging:24.1.0")
     androidTestImplementation("androidx.test.espresso:espresso-contrib:3.6.1")
 
 
     // Firebase
+    implementation("com.google.firebase:firebase-auth")
+
     implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.firebase:firebase-storage")
     implementation("com.google.firebase:firebase-messaging-ktx")
 
-    //Auth
-    implementation("com.google.firebase:firebase-auth")
+
+
     // Google SignIn and Maps
     //implementation("com.google.android.gms:play-services-auth:21.2.0")
     //implementation ("com.google.android.gms:play-services-maps:19.0.0")
