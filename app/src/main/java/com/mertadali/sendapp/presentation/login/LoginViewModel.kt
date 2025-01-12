@@ -1,6 +1,7 @@
 package com.mertadali.sendapp.presentation.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mertadali.sendapp.domain.use_case.GoogleSignInUseCase
 import com.mertadali.sendapp.domain.use_case.SignInUseCase
 import com.mertadali.sendapp.util.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,7 +13,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(private val signInUseCase: SignInUseCase) : ViewModel() {
+class LoginViewModel @Inject constructor(private val signInUseCase: SignInUseCase, private val googleSignInUseCase: GoogleSignInUseCase
+) : ViewModel() {
 
     private val _state = MutableStateFlow(LoginState())
     val state: StateFlow<LoginState> = _state.asStateFlow()
@@ -66,6 +68,40 @@ class LoginViewModel @Inject constructor(private val signInUseCase: SignInUseCas
                         _state.value = _state.value.copy(isLoading = false, isLoggedIn = true)
                     }
                 }
+            }
+        }
+    }
+
+    fun handleGoogleSignIn(idToken: String) {
+        viewModelScope.launch {
+            _state.value = _state.value.copy(isLoading = true)
+            try {
+                googleSignInUseCase(idToken).collect { response ->
+
+                    when(response) {
+                        is Response.Success -> {
+                            _state.value = _state.value.copy(
+                                isLoading = false,
+                                isLoggedIn = true,
+                                user = response.data.user
+                            )
+                        }
+                        is Response.Error -> {
+                            _state.value = _state.value.copy(
+                                isLoading = false,
+                                errorMessage = response.message
+                            )
+                        }
+                        is Response.Loading -> {
+                            _state.value = _state.value.copy(isLoading = true)
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                _state.value = _state.value.copy(
+                    isLoading = false,
+                    errorMessage = e.message ?: "Google sign in failed"
+                )
             }
         }
     }

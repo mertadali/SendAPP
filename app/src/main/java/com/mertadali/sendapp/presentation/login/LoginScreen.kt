@@ -1,6 +1,9 @@
     package com.mertadali.sendapp.presentation.login
     
+    import android.app.Activity
     import android.widget.Toast
+    import androidx.activity.compose.rememberLauncherForActivityResult
+    import androidx.activity.result.contract.ActivityResultContracts
     import androidx.compose.foundation.Image
     import androidx.compose.foundation.background
     import androidx.compose.foundation.clickable
@@ -56,13 +59,42 @@
     import androidx.compose.ui.unit.sp
     import androidx.hilt.navigation.compose.hiltViewModel
     import androidx.navigation.NavController
+    import com.google.android.gms.auth.api.signin.GoogleSignIn
+    import com.google.android.gms.auth.api.signin.GoogleSignInClient
+    import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+    import com.google.android.gms.common.api.ApiException
     import com.mertadali.sendapp.R
+    import com.mertadali.sendapp.presentation.Screen
 
     @Composable
-    fun LoginScreen(navController: NavController,viewModel: LoginViewModel = hiltViewModel()){
-        val backgroundImage = painterResource(id = R.drawable.background3)
+    fun LoginScreen(navController: NavController,viewModel: LoginViewModel = hiltViewModel()
+    ) {
+
     
         val state by viewModel.state.collectAsState()
+
+        val context = LocalContext.current
+
+        val googleSignInClient = GoogleSignIn.getClient(context, GoogleSignInOptions.DEFAULT_SIGN_IN)
+
+
+        val launcher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+                try {
+                    val account = task.getResult(ApiException::class.java)
+                    account?.idToken?.let { token ->
+                        viewModel.handleGoogleSignIn(token)
+                    }
+                } catch (e: ApiException) {
+                    Toast.makeText(context, "Google sign in failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        val backgroundImage = painterResource(id = R.drawable.background3)
     
     
         Box(modifier = Modifier
@@ -162,7 +194,7 @@
                         Spacer(modifier = Modifier.padding(2.dp))
 
 
-                        SpecialForgotPassword(onClick = { navController.navigate("forgot_screen") })
+                        SpecialForgotPassword(onClick = { navController.navigate(Screen.ForgotScreen.route)})
 
 
                         CheckBoxLoggedIn()
@@ -174,9 +206,26 @@
 
                         OrLoginWith()
 
-                        GoogleSignInButton(onClick = { /*TODO*/ })
+                        GoogleSignInButton(
 
-                        AskAccount(onClick = { /*TODO*/ })
+                            onClick = {
+
+                                try {
+                                    googleSignInClient.signOut().addOnCompleteListener {
+                                        launcher.launch(googleSignInClient.signInIntent)
+                                    }
+                                } catch (e: Exception) {
+                                    Toast.makeText(
+                                        context,
+                                        "Error launching Google Sign In: ${e.message}",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            }
+                        )
+
+
+                        AskAccount(onClick = {navController.navigate(Screen.SignUpScreen.route)})
 
 
                         // Loading Indicator
@@ -185,8 +234,8 @@
                         }
                         LaunchedEffect(key1 = state.isLoggedIn) {
                             if (state.isLoggedIn) {
-                                navController.navigate("feed_screen") {
-                                    popUpTo("login_screen") {
+                                navController.navigate(Screen.FeedScreen.route) {
+                                    popUpTo(Screen.LoginScreen.route) {
                                         inclusive = true
                                     }
                                 }
@@ -390,13 +439,12 @@
     }
     
     @Composable
-    fun AskAccount(onClick: () -> Unit){
+    fun AskAccount(onClick: () -> Unit,){
         Column(modifier = Modifier
             .padding(bottom = 29.dp)
             .fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally) {
-    
             Text(text = "Don't you have an account yet?",
                 color = Color.DarkGray,
                 textAlign = TextAlign.Center,
@@ -404,11 +452,11 @@
     
             Text(text = "Sign up",
                 color = Color.Blue,
-                modifier = Modifier.clickable { onClick() },
+                modifier = Modifier.clickable { onClick()},
                 textAlign = TextAlign.Center,
                 fontSize = 14.sp,
                 style = TextStyle(textDecoration = TextDecoration.Underline))
-            
+
         }
     
     }

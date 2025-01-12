@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.mertadali.sendapp.R
+import com.mertadali.sendapp.presentation.Screen
 
 @Composable
 fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = hiltViewModel()){
@@ -159,14 +160,14 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = hilt
 
                     GoogleSignUpButton(onClick = { /*TODO*/ })
 
-                    AskAccount(onClick = { /*TODO*/})
+                    AskAccount(onClick = {navController.navigate(Screen.LoginScreen.route)})
 
                     // Başarılı kayıt durumunda yönlendirme
                     LaunchedEffect(key1 = state.isSignUpSuccessful) {
                         if (state.isSignUpSuccessful) {
                             Toast.makeText(context, "Sign up successful!", Toast.LENGTH_SHORT).show()
-                            navController.navigate("feed_screen") {
-                                popUpTo("signup_screen") { inclusive = true }
+                            navController.navigate(Screen.FeedScreen.route) {
+                                popUpTo(Screen.SignUpScreen.route) { inclusive = true }
                             }
                         }
                     }

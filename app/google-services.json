@@ -12,7 +12,20 @@
           "package_name": "com.mertadali.sendapp"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "181469459994-83q7ugkqcj8t8e10j96gqj9sm9718hda.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mertadali.sendapp",
+            "certificate_hash": "48ba7334201f8f7e62845093e038f12d37952c5c"
+          }
+        },
+        {
+          "client_id": "181469459994-qrb0eq30b2bk2lph6ud6llv0ccnfoe1e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDaLuT1bLOFYb5N1oXAcZkyqxbniIDYJiM"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "181469459994-qrb0eq30b2bk2lph6ud6llv0ccnfoe1e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

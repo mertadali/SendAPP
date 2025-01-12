@@ -3,6 +3,7 @@ package com.mertadali.sendapp.data.repository
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
 import com.mertadali.sendapp.domain.repository.FirebaseAuthRepository
 import com.mertadali.sendapp.util.Response
 import kotlinx.coroutines.flow.Flow
@@ -50,9 +51,18 @@ class FirebaseRepoImpl @Inject constructor(
         }
     }
 
-    override suspend fun googleSignIn() {
-        // TODO: Implement Google Sign In
+    override suspend fun signInWithGoogle(token: String): Flow<Response<AuthResult>> = flow{
+        try {
+            emit(Response.Loading)
+            val credential = GoogleAuthProvider.getCredential(token, null)
+            val result = auth.signInWithCredential(credential).await()
+            emit(Response.Success(result))
+        } catch (e: Exception) {
+            emit(Response.Error(e.message ?: "Google sign in failed!"))
+        }
+
     }
+
 
     override suspend fun saveToFirebase() {
         // TODO: Implement save to Firebase
