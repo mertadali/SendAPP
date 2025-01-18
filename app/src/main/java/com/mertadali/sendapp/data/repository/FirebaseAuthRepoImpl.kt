@@ -56,13 +56,32 @@ class FirebaseRepoImpl @Inject constructor(
             emit(Response.Loading)
             val credential = GoogleAuthProvider.getCredential(token, null)
             val result = auth.signInWithCredential(credential).await()
+            result.user?.let {
+                if (!it.isEmailVerified) {
+                    it.sendEmailVerification().await()
+                }
+            }
             emit(Response.Success(result))
         } catch (e: Exception) {
             emit(Response.Error(e.message ?: "Google sign in failed!"))
         }
-
     }
 
+    override suspend fun sendEmailVerification(): Flow<Response<Unit>> = flow {
+        try {
+            emit(Response.Loading)
+            auth.currentUser?.let {
+                if (!it.isEmailVerified) {
+                    it.sendEmailVerification().await()
+                    emit(Response.Success(Unit))
+                } else {
+                    emit(Response.Error("Email is already verified"))
+                }
+            } ?: emit(Response.Error("No user is signed in"))
+        } catch (e: Exception) {
+            emit(Response.Error(e.message ?: "Failed to send verification email"))
+        }
+    }
 
     override suspend fun saveToFirebase() {
         // TODO: Implement save to Firebase

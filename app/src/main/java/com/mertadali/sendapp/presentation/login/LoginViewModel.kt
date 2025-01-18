@@ -85,6 +85,7 @@ class LoginViewModel @Inject constructor(private val signInUseCase: SignInUseCas
                                 isLoggedIn = true,
                                 user = response.data.user
                             )
+
                         }
                         is Response.Error -> {
                             _state.value = _state.value.copy(

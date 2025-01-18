@@ -1,5 +1,5 @@
     package com.mertadali.sendapp.presentation.login
-    
+
     import android.app.Activity
     import android.widget.Toast
     import androidx.activity.compose.rememberLauncherForActivityResult
@@ -31,6 +31,7 @@
     import androidx.compose.material3.TextField
     import androidx.compose.material3.TextFieldDefaults
     import androidx.compose.runtime.Composable
+    import androidx.compose.runtime.DisposableEffect
     import androidx.compose.runtime.LaunchedEffect
     import androidx.compose.runtime.collectAsState
     import androidx.compose.runtime.getValue
@@ -60,7 +61,6 @@
     import androidx.hilt.navigation.compose.hiltViewModel
     import androidx.navigation.NavController
     import com.google.android.gms.auth.api.signin.GoogleSignIn
-    import com.google.android.gms.auth.api.signin.GoogleSignInClient
     import com.google.android.gms.auth.api.signin.GoogleSignInOptions
     import com.google.android.gms.common.api.ApiException
     import com.mertadali.sendapp.R
@@ -70,12 +70,25 @@
     fun LoginScreen(navController: NavController,viewModel: LoginViewModel = hiltViewModel()
     ) {
 
-    
+
         val state by viewModel.state.collectAsState()
 
         val context = LocalContext.current
 
-        val googleSignInClient = GoogleSignIn.getClient(context, GoogleSignInOptions.DEFAULT_SIGN_IN)
+        // val googleSignInClient = GoogleSignIn.getClient(context, GoogleSignInOptions.DEFAULT_SIGN_IN)
+
+        val googleSignInClient = remember {
+            GoogleSignIn.getClient(context, GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken("181469459994-qrb0eq30b2bk2lph6ud6llv0ccnfoe1e.apps.googleusercontent.com")  // Replace with your actual web client ID
+                .requestEmail()
+                .build())
+        }
+
+        DisposableEffect(Unit) {
+            onDispose {
+                googleSignInClient.signOut()
+            }
+        }
 
 
         val launcher = rememberLauncherForActivityResult(
@@ -95,25 +108,25 @@
         }
 
         val backgroundImage = painterResource(id = R.drawable.background3)
-    
-    
+
+
         Box(modifier = Modifier
             .fillMaxSize()
            ){
-            
+
             Image(painter = backgroundImage,
                 contentDescription = "background",
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop)
-    
+
             Column(modifier = Modifier
                 .fillMaxHeight()
                 .padding(vertical = 29.dp, horizontal = 5.dp)
                 .align(alignment = Alignment.Center)
                 .alpha(0.94f),
                horizontalAlignment = Alignment.CenterHorizontally) {
-    
-    
+
+
                 Text(
                     text = "Welcome",
                     textAlign = TextAlign.Center,
@@ -122,9 +135,9 @@
                     fontStyle = FontStyle.Italic,
                     fontFamily = FontFamily.Cursive
                 )
-    
+
                 Spacer(modifier = Modifier.padding(3.dp))
-    
+
                 Text(
                     text = "to the",
                     textAlign = TextAlign.Center,
@@ -133,10 +146,10 @@
                     fontStyle = FontStyle.Normal,
                     fontFamily = FontFamily.Cursive
                 )
-    
-    
+
+
                 Spacer(modifier = Modifier.padding(vertical = 5.dp))
-    
+
                 Card(
                     modifier = Modifier
                         .padding(10.dp)
@@ -144,7 +157,7 @@
                         shape = RoundedCornerShape(46.dp),
                     elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
                 ) {
-    
+
                     Column(
                         modifier = Modifier
                             .fillMaxHeight()
@@ -197,7 +210,9 @@
                         SpecialForgotPassword(onClick = { navController.navigate(Screen.ForgotScreen.route)})
 
 
-                        CheckBoxLoggedIn()
+                        CheckBoxLoggedIn(onClick = {
+                            println("Eklenecek.")
+                        })
 
                         LoginButton(onClick = { viewModel.onEvent(LoginEvent.ClickLogin) })
 
@@ -211,9 +226,14 @@
                             onClick = {
 
                                 try {
-                                    googleSignInClient.signOut().addOnCompleteListener {
-                                        launcher.launch(googleSignInClient.signInIntent)
-                                    }
+                               /*     googleSignInClient.signOut().addOnCompleteListener {
+                                        val signInIntent = googleSignInClient.signInIntent
+                                        launcher.launch(signInIntent)
+                                        googleSignInClient.signInIntent.extras?.clear()
+                                                                       }
+                                */
+                                    launcher.launch(googleSignInClient.signInIntent)
+
                                 } catch (e: Exception) {
                                     Toast.makeText(
                                         context,
@@ -253,27 +273,27 @@
             }
        }
     }
-    
+
     @Composable
     fun SpecialTextField(hint: String, modifier: Modifier, onValueChange: (String) -> Unit){
-    
+
         var text by remember {
             mutableStateOf("")
         }
         var isHintDisplayed by remember {
             mutableStateOf(hint != "")
         }
-    
+
         TextField(
             value = text,
-            onValueChange = { 
+            onValueChange = {
                 text = it
                 onValueChange(it)
             },
             maxLines = 1,
             singleLine = true,
             textStyle = TextStyle(color = Color.Black, textAlign = TextAlign.Start, fontSize = 14.sp),
-    
+
             colors = TextFieldDefaults.colors(
                 unfocusedContainerColor = Color.White,
                 cursorColor = Color.Black,
@@ -288,9 +308,9 @@
                 },
             placeholder = { Text(hint, color = Color.Gray, fontSize = 13.sp)} // Placeholder kullanımı
         )
-    
+
     }
-    
+
     @Composable
     fun SpecialForgotPassword(onClick : () -> Unit){
         Text(
@@ -300,11 +320,11 @@
                 .padding(vertical = 3.dp, horizontal = 7.dp),
             color = MaterialTheme.colorScheme.secondary,
             fontSize = 13.sp)
-    
-    
-        
+
+
+
     }
-    
+
     @Composable
     fun SpecialPasswordText(hint: String, onValueChange: (String) -> Unit){
         var text by remember {
@@ -313,10 +333,10 @@
         var isHintDisplayed by remember {
             mutableStateOf(hint != "")
         }
-    
+
         TextField(
             value = text,
-            onValueChange = { 
+            onValueChange = {
                 text = it
                 onValueChange(it)
             },
@@ -337,37 +357,37 @@
                     isHintDisplayed = it.isFocused != true && text.isEmpty()
                 },
             placeholder = { Text(hint, color = Color.Gray, fontSize = 13.sp)}// Placeholder kullanımı
-    
+
         )
-    
+
     }
-    
+
     @Composable
-    fun CheckBoxLoggedIn(){
-    
+    fun CheckBoxLoggedIn(onClick: () -> Unit){
+
         var checked by remember {
             mutableStateOf(false)
         }
-    
+
         val scaleMultiplier = 0.9f //scale by 2x
-    
+
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()) {
-    
+
             Checkbox(
                 modifier = Modifier.scale(scaleMultiplier),
                 checked = checked,
                 onCheckedChange = {checked = it},
                 colors = CheckboxDefaults.colors(checkedColor = Color.LightGray, uncheckedColor = Color.LightGray, checkmarkColor = Color.White))
-    
+
             Text(text = "Keep me logged in.", color = Color.Gray, fontSize = 13.sp)
-    
+
         }
-    
+
     }
-    
+
     @Composable
     fun LoginButton(onClick: () -> Unit){
         Button(
@@ -379,11 +399,11 @@
             shape = RoundedCornerShape(2.dp)
         ) {
             Text(text ="Login", color = Color.White, fontSize = 15.sp, fontWeight = FontWeight.SemiBold )
-    
+
         }
-    
+
     }
-    
+
     @Composable
     fun OrLoginWith() {
         Row(
@@ -399,14 +419,14 @@
                     .height(1.dp),
                 color = Color.LightGray
             )
-    
+
             Text(
                 text = "or login with",
                 color = Color.Black,
                 fontSize = 14.sp,
                 modifier = Modifier.padding(horizontal = 8.dp)
             )
-    
+
             HorizontalDivider(
                 modifier = Modifier
                     .weight(1f)
@@ -415,11 +435,11 @@
             )
         }
     }
-    
+
     @Composable
     fun GoogleSignInButton( onClick: () -> Unit){
          Box(contentAlignment = Alignment.Center) {
-    
+
              Button(
                  onClick = { onClick() },
                  colors = ButtonDefaults.buttonColors(containerColor = Color.White),
@@ -437,7 +457,7 @@
              }
          }
     }
-    
+
     @Composable
     fun AskAccount(onClick: () -> Unit,){
         Column(modifier = Modifier
@@ -449,7 +469,7 @@
                 color = Color.DarkGray,
                 textAlign = TextAlign.Center,
                 fontSize = 14.sp)
-    
+
             Text(text = "Sign up",
                 color = Color.Blue,
                 modifier = Modifier.clickable { onClick()},
@@ -458,8 +478,8 @@
                 style = TextStyle(textDecoration = TextDecoration.Underline))
 
         }
-    
+
     }
-    
-    
-    
+
+
+

@@ -1,6 +1,9 @@
 package com.mertadali.sendapp.presentation.sign_up
 
+import android.app.Activity
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -30,6 +33,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import com.mertadali.sendapp.R
 import com.mertadali.sendapp.presentation.Screen
 
@@ -40,7 +46,39 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = hilt
 
     val state = viewModel.state.collectAsState().value
     val context = LocalContext.current
+     val RC_SIGN_IN = 9001
 
+
+
+    val googleSignInClient = remember {
+        GoogleSignIn.getClient(context, GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken("181469459994-qrb0eq30b2bk2lph6ud6llv0ccnfoe1e.apps.googleusercontent.com")  // Replace with your actual web client ID
+            .requestEmail()
+            .build())
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            googleSignInClient.signOut()
+        }
+    }
+
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+                account?.idToken?.let { token ->
+                   viewModel.handleGoogleSignUp(token)
+                }
+            } catch (e: ApiException) {
+                Toast.makeText(context, "Google sign in failed: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
     // Hata mesajı için LaunchedEffect
     LaunchedEffect(key1 = state.errorMessage) {
@@ -48,6 +86,8 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = hilt
             Toast.makeText(context, message, Toast.LENGTH_LONG).show()
         }
     }
+
+
 
 
 
@@ -158,11 +198,28 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = hilt
 
                     OrSignUpWith()
 
-                    GoogleSignUpButton(onClick = { /*TODO*/ })
+                    GoogleSignUpButton(onClick = {
+                        try {
+                            /*     googleSignInClient.signOut().addOnCompleteListener {
+                                     val signInIntent = googleSignInClient.signInIntent
+                                     launcher.launch(signInIntent)
+                                     googleSignInClient.signInIntent.extras?.clear()
+                                                                    }
+                             */
+                            launcher.launch(googleSignInClient.signInIntent)
+
+                        } catch (e: Exception) {
+                            Toast.makeText(
+                                context,
+                                "Error launching Google Sign In: ${e.message}",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    })
 
                     AskAccount(onClick = {navController.navigate(Screen.LoginScreen.route)})
 
-                    // Başarılı kayıt durumunda yönlendirme
+                    //Başarılı kayıt durumunda yönlendirme
                     LaunchedEffect(key1 = state.isSignUpSuccessful) {
                         if (state.isSignUpSuccessful) {
                             Toast.makeText(context, "Sign up successful!", Toast.LENGTH_SHORT).show()
@@ -171,6 +228,8 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = hilt
                             }
                         }
                     }
+
+
 
 
 
