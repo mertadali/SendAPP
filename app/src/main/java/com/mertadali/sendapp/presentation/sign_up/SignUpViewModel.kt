@@ -91,10 +91,6 @@ class SignUpViewModel @Inject constructor(private val signUpUseCase: SignUpUseCa
             return
         }
 
-        if (!_state.value.isPrivacyPolicyAccepted) {
-            _state.value = _state.value.copy(errorMessage = "Please accept the privacy policy")
-            return
-        }
 
         viewModelScope.launch {
             signUpUseCase.invoke(email, password).collect { response ->

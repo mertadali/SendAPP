@@ -1,4 +1,6 @@
-    package com.mertadali.sendapp.presentation.login
+@file:Suppress("DEPRECATION")
+
+package com.mertadali.sendapp.presentation.login
 
     import android.app.Activity
     import android.widget.Toast
@@ -67,15 +69,12 @@
     import com.mertadali.sendapp.presentation.Screen
 
     @Composable
-    fun LoginScreen(navController: NavController,viewModel: LoginViewModel = hiltViewModel()
+    fun LoginScreen(navController: NavController, viewModel: LoginViewModel = hiltViewModel()
     ) {
-
 
         val state by viewModel.state.collectAsState()
 
         val context = LocalContext.current
-
-        // val googleSignInClient = GoogleSignIn.getClient(context, GoogleSignInOptions.DEFAULT_SIGN_IN)
 
         val googleSignInClient = remember {
             GoogleSignIn.getClient(context, GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -89,6 +88,9 @@
                 googleSignInClient.signOut()
             }
         }
+
+
+
 
 
         val launcher = rememberLauncherForActivityResult(
@@ -211,8 +213,10 @@
 
 
                         CheckBoxLoggedIn(onClick = {
-                            println("Eklenecek.")
+                            viewModel.onEvent(LoginEvent.IsLoggedIn(it))
                         })
+
+
 
                         LoginButton(onClick = { viewModel.onEvent(LoginEvent.ClickLogin) })
 
@@ -249,10 +253,10 @@
 
 
                         // Loading Indicator
-                        if (state.isLoading) {
+                        if (state.isLoadingState) {
                             CircularProgressIndicator(modifier = Modifier.padding(top = 10.dp))
                         }
-                        LaunchedEffect(key1 = state.isLoggedIn) {
+                     /*   LaunchedEffect(key1 = state.isLoggedIn) {
                             if (state.isLoggedIn) {
                                 navController.navigate(Screen.FeedScreen.route) {
                                     popUpTo(Screen.LoginScreen.route) {
@@ -261,10 +265,12 @@
                                 }
                             }
                         }
+
+                      */
                         val context = LocalContext.current
-                        LaunchedEffect(key1 = state.errorMessage) {
-                            if (state.errorMessage != null) {
-                                Toast.makeText(context, state.errorMessage, Toast.LENGTH_SHORT)
+                        LaunchedEffect(key1 = state.errorMessageState) {
+                            if (state.errorMessageState != null) {
+                                Toast.makeText(context, state.errorMessageState, Toast.LENGTH_SHORT)
                                     .show()
                             }
                         }
@@ -363,7 +369,7 @@
     }
 
     @Composable
-    fun CheckBoxLoggedIn(onClick: () -> Unit){
+    fun CheckBoxLoggedIn(onClick: (Boolean) -> Unit){
 
         var checked by remember {
             mutableStateOf(false)
@@ -379,7 +385,7 @@
             Checkbox(
                 modifier = Modifier.scale(scaleMultiplier),
                 checked = checked,
-                onCheckedChange = {checked = it},
+                onCheckedChange = { onClick(it)},
                 colors = CheckboxDefaults.colors(checkedColor = Color.LightGray, uncheckedColor = Color.LightGray, checkmarkColor = Color.White))
 
             Text(text = "Keep me logged in.", color = Color.Gray, fontSize = 13.sp)

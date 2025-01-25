@@ -1,19 +1,29 @@
 package com.mertadali.sendapp.data.repository
 
+import android.content.Context
+import android.content.SharedPreferences
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.mertadali.sendapp.domain.repository.FirebaseAuthRepository
 import com.mertadali.sendapp.util.Response
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-class FirebaseRepoImpl @Inject constructor(
-    private val auth: FirebaseAuth
+class FirebaseRepoImpl @Inject constructor(private val auth: FirebaseAuth, private val sharedPreferences: SharedPreferences
 ) : FirebaseAuthRepository {
+
+    // SharedPreferences için gerekli sabitler
+
+    private val PREF_NAME = "login_preferences"
+    private val KEY_CHECKBOX = "checkbox_state"
+
+    // SharedPreferences instance'ı
+    private val LOGGED_IN_KEY = "logged_in"
 
     override suspend fun signInWithEmailAndPassword(email: String, password: String): Flow<Response<AuthResult>> = flow {
         try {
@@ -40,6 +50,7 @@ class FirebaseRepoImpl @Inject constructor(
     }
 
     override suspend fun getSignedInUser(): FirebaseUser? = auth.currentUser
+
 
     override suspend fun sendPasswordResetEmail(email: String): Flow<Response<Unit>> = flow {
         try {
@@ -83,11 +94,23 @@ class FirebaseRepoImpl @Inject constructor(
         }
     }
 
+    override suspend fun isLoggedIn(): Boolean {
+        return  sharedPreferences.getBoolean(LOGGED_IN_KEY, false)
+    }
+
+    override suspend fun setLoggedIn(loggedIn: Boolean) {
+        sharedPreferences.edit().putBoolean(LOGGED_IN_KEY, loggedIn).apply()
+    }
+
+
+
+
     override suspend fun saveToFirebase() {
-        // TODO: Implement save to Firebase
+        // TODO: Implement delete from Firebase
     }
 
     override suspend fun deleteFromFirebase() {
         // TODO: Implement delete from Firebase
+
     }
 }

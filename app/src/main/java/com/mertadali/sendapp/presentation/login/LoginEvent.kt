@@ -7,7 +7,7 @@
         data object ClickLogin : LoginEvent()
         data object ClickForgot : LoginEvent()
         data object SignGoogle : LoginEvent()
-
+        data class IsLoggedIn(val isLoggedIn : Boolean) : LoginEvent()
 
 
 

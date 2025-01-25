@@ -3,12 +3,12 @@ package com.mertadali.sendapp.presentation.login
 import com.google.firebase.auth.FirebaseUser
 
 data class LoginState(
-    val email : String = "",
-    val password : String = "",
-    val isLoading : Boolean = false,
-    val errorMessage : String? = null,
-    val isLoggedIn : Boolean = false,
-    val user : FirebaseUser? = null,
-    val isGoogleSignInClicked : Boolean = false,      // Google SignIn yapılacak
-    val isForgotPasswordClicked : Boolean = false
+    val emailState : String = "",
+    val passwordState : String = "",
+    val isLoadingState : Boolean = false,
+    val errorMessageState : String? = null,
+    val userState : FirebaseUser? = null,
+    val isGoogleSignInClickedState : Boolean = false,      // Google SignIn yapılacak
+    val isForgotPasswordClickedState : Boolean = false,
+    val loggedInState : Boolean = false
     )
