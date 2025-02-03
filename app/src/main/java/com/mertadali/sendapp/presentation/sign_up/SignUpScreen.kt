@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.mertadali.sendapp.presentation.sign_up
 
 import android.app.Activity
@@ -8,7 +10,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Visibility
@@ -34,6 +38,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -49,7 +54,6 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = hilt
 
     val state = viewModel.state.collectAsState().value
     val context = LocalContext.current
-    val RC_SIGN_IN = 9001
 
 
 
@@ -89,10 +93,6 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = hilt
             Toast.makeText(context, message, Toast.LENGTH_LONG).show()
         }
     }
-
-
-
-
 
     Box(modifier = Modifier
         .fillMaxSize()
@@ -184,7 +184,8 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = hilt
 
                     PasswordCondition()
 
-                    PrivacyPolicy(onClick = { /*TODO*/})
+                    PrivacyPolicy()
+
 
                     // Loading gösterimi
                     if (state.isLoading) {
@@ -203,12 +204,6 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = hilt
 
                     GoogleSignUpButton(onClick = {
                         try {
-                            /*     googleSignInClient.signOut().addOnCompleteListener {
-                                     val signInIntent = googleSignInClient.signInIntent
-                                     launcher.launch(signInIntent)
-                                     googleSignInClient.signInIntent.extras?.clear()
-                                                                    }
-                             */
                             launcher.launch(googleSignInClient.signInIntent)
 
                         } catch (e: Exception) {
@@ -231,10 +226,6 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = hilt
                             }
                         }
                     }
-
-
-
-
 
                 }
             }
@@ -346,35 +337,122 @@ fun PasswordCondition(){
 }
 
 @Composable
-fun PrivacyPolicy(onClick: () -> Unit){
-
-    var checked by remember {
-        mutableStateOf(false)
-    }
-
-    val scaleMultiplier = 0.9f //scale by 2x
+fun PrivacyPolicy(){
+    var checked by remember { mutableStateOf(false) }
+    var showPrivacyPolicy by remember { mutableStateOf(false) }
+    val scaleMultiplier = 0.9f
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()) {
-
+        modifier = Modifier.fillMaxWidth()
+    ) {
         Checkbox(
             modifier = Modifier.scale(scaleMultiplier),
             checked = checked,
-            onCheckedChange = {checked = it},
-            colors = CheckboxDefaults.colors(checkedColor = Color.LightGray, uncheckedColor = Color.LightGray, checkmarkColor = Color.White))
+            onCheckedChange = { checked = it },
+            colors = CheckboxDefaults.colors(
+                checkedColor = Color.LightGray,
+                uncheckedColor = Color.LightGray,
+                checkmarkColor = Color.White
+            )
+        )
 
         Text(text = "I agree to the", color = Color.Gray, fontSize = 13.sp)
         Spacer(modifier = Modifier.padding(horizontal = 1.dp))
-        Text(text = "privacy policy", color = MaterialTheme.colorScheme.secondary, fontSize = 13.sp,style = TextStyle(textDecoration = TextDecoration.Underline),
-            modifier = Modifier.clickable { onClick() })
-
-
+        Text(
+            text = "privacy policy",
+            color = MaterialTheme.colorScheme.secondary,
+            fontSize = 13.sp,
+            style = TextStyle(textDecoration = TextDecoration.Underline),
+            modifier = Modifier.clickable { showPrivacyPolicy = true }
+        )
     }
 
-}
+    if (showPrivacyPolicy) {
+        Dialog(onDismissRequest = { showPrivacyPolicy = false }) {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.8f),
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(containerColor = Color.White)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp)
+                ) {
+                    Text(
+                        text = "Privacy Policy",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
 
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .verticalScroll(rememberScrollState())
+                    ) {
+                        Text(
+                            text = """
+                                Privacy Policy for SendApp
+                                
+                                Last updated: March 2024
+                                
+                                1. Introduction
+                                Welcome to SendApp. We respect your privacy and are committed to protecting your personal data.
+                                
+                                2. Information We Collect
+                                - Email address
+                                - Name and surname
+                                - Profile information
+                                - Location data (with your permission)
+                                
+                                3. How We Use Your Information
+                                - To provide and maintain our services
+                                - To notify you about changes
+                                - To provide customer support
+                                - To detect and prevent fraud
+                                
+                                4. Data Security
+                                We implement appropriate security measures to protect your data.
+                                
+                                5. Your Rights
+                                You have the right to:
+                                - Access your data
+                                - Correct your data
+                                - Delete your data
+                                - Object to processing
+                                
+                                6. Contact Us
+                                Email: support@sendapp.com
+                                
+                                7. Changes
+                                We may update this policy from time to time.
+                                
+                                8. Consent
+                                By using our app, you consent to this privacy policy.
+                            """.trimIndent(),
+                            fontSize = 14.sp,
+                            lineHeight = 20.sp
+                        )
+                    }
+
+                    Button(
+                        onClick = { showPrivacyPolicy = false },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 16.dp)
+                    ) {
+                        Text("Close")
+                    }
+                }
+            }
+        }
+    }
+}
 
 @Composable
 fun SignUpButton(viewModel: SignUpViewModel, state: SignUpState){
@@ -473,7 +551,6 @@ fun AskAccount(onClick: () -> Unit){
             textAlign = TextAlign.Center,
             fontSize = 14.sp,
             style = TextStyle(textDecoration = TextDecoration.Underline))
-
     }
 
 }
