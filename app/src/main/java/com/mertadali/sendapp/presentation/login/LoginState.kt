@@ -10,5 +10,7 @@ data class LoginState(
     val userState : FirebaseUser? = null,
     val isGoogleSignInClickedState : Boolean = false,      // Google SignIn yapılacak
     val isForgotPasswordClickedState : Boolean = false,
-    val loggedInState : Boolean = false
-    )
+    val loggedInState : Boolean = false,
+    val keepMeLoggedInState : Boolean = false
+
+)

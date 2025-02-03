@@ -14,7 +14,7 @@ interface FirebaseAuthRepository {
     suspend fun sendPasswordResetEmail(email: String): Flow<Response<Unit>>
     suspend fun signInWithGoogle(token  :String) : Flow<Response<AuthResult>>
     suspend fun sendEmailVerification(): Flow<Response<Unit>>
-    suspend fun isLoggedIn() : Boolean
+    suspend fun getLoggedIn() : Boolean
     suspend fun setLoggedIn(loggedIn : Boolean)
 
 

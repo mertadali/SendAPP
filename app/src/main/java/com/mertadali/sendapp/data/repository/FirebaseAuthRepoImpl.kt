@@ -47,6 +47,7 @@ class FirebaseRepoImpl @Inject constructor(private val auth: FirebaseAuth, priva
 
     override suspend fun signOut() {
         auth.signOut()
+        setLoggedIn(false)
     }
 
     override suspend fun getSignedInUser(): FirebaseUser? = auth.currentUser
@@ -94,7 +95,7 @@ class FirebaseRepoImpl @Inject constructor(private val auth: FirebaseAuth, priva
         }
     }
 
-    override suspend fun isLoggedIn(): Boolean {
+    override suspend fun getLoggedIn(): Boolean {
         return  sharedPreferences.getBoolean(LOGGED_IN_KEY, false)
     }
 

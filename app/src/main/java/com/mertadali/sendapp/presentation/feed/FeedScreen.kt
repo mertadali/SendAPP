@@ -3,6 +3,7 @@ package com.mertadali.sendapp.presentation.feed
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -13,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -87,17 +89,15 @@ fun FeedScreen(navController: NavController) {
 
 
 @Composable
-fun SearchBar( hint : String, onSearch : (String) -> Unit = {} ){
+fun SearchBar(hint: String, onSearch: (String) -> Unit = {}) {
     var text by remember { mutableStateOf("") }
-
     var isHintDisplayed by remember { mutableStateOf(hint.isNotEmpty()) }
 
-    Box(modifier = Modifier
-        .fillMaxWidth()) {
-        TextField(value = text,
+    Box(modifier = Modifier.fillMaxWidth()) {
+        TextField(
+            value = text,
             onValueChange = { text = it },
             keyboardActions = KeyboardActions(onDone = { onSearch(text) }),
-
             maxLines = 1,
             singleLine = true,
             textStyle = TextStyle(color = Color.Black),
@@ -105,24 +105,31 @@ fun SearchBar( hint : String, onSearch : (String) -> Unit = {} ){
             colors = TextFieldDefaults.colors(
                 unfocusedContainerColor = Color.White,
                 focusedContainerColor = Color.White,
-                cursorColor = Color.Black),
+                cursorColor = Color.Black
+            ),
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = "Search Icon",
+                    tint = Color.Black,
+                    modifier = Modifier.size(24.dp)
+                )
+            },
+            placeholder = {
+                Text(
+                    text = hint,
+                    color = Color.Gray
+                )
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .shadow(5.dp, CircleShape)
                 .background(color = Color.White, CircleShape)
                 .padding(horizontal = 20.dp)
                 .onFocusChanged { focusState ->
-                    // kullanıcı tıkladıysa hint gözükmesin istiyoruz
                     isHintDisplayed = !focusState.isFocused && text.isEmpty()
-                })
-
-
-        if (isHintDisplayed) {
-            Text(text = hint,
-                color = Color.Black,
-                modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp))
-
-        }
+                }
+        )
     }
 }
 

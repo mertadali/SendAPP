@@ -16,15 +16,23 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -46,16 +54,57 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.google.firebase.auth.FirebaseAuth
 import com.mertadali.sendapp.R
 import com.mertadali.sendapp.presentation.Screen
 import com.mertadali.sendapp.presentation.feed.BottomNavBar
-import com.mertadali.sendapp.presentation.login.SpecialTextField
 import java.util.Calendar
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(navController: NavController){
 
     Scaffold(
+        topBar = {
+            Column {
+                TopAppBar(
+                    title = {
+                        Text(
+                            text = "Profile",
+                            color = MaterialTheme.colorScheme.tertiary,
+                            fontSize = 27.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = Color.White,
+                        titleContentColor = Color.Black
+                    ),
+                    actions = {
+                        IconButton(onClick = {
+                            FirebaseAuth.getInstance().signOut()
+                            navController.navigate(Screen.LoginScreen.route) {
+                                popUpTo(navController.graph.startDestinationId) {
+                                    inclusive = true
+                                }
+                            }
+                        }) {
+                            Icon(
+                                imageVector = Icons.Default.ExitToApp,
+                                contentDescription = "Logout",
+                                tint = Color.Black,
+                                modifier = Modifier.size(26.dp)
+                            )
+                        }
+                    },
+                    modifier = Modifier.height(64.dp)
+                )
+                HorizontalDivider(
+                    color = Color(0xFFE0E0E0),
+                    thickness = 1.dp
+                )
+            }
+        },
         bottomBar = {
             BottomNavBar(
                 navController = navController,
@@ -68,30 +117,17 @@ fun ProfileScreen(navController: NavController){
             )
         }
     ) { innerPadding ->
-
-
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-
             Column(modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 8.dp)
                 .fillMaxWidth()
                 .verticalScroll(rememberScrollState())
-                .align(alignment = Alignment.Center)) {
+                .padding(horizontal = 16.dp)) {
 
                 val backgroundImage = painterResource(id = R.drawable.ic_launcher_background)
-
-                Text(
-                    text = "Profile",
-                    modifier = Modifier.padding(7.dp),
-                    color = MaterialTheme.colorScheme.tertiary,
-                    textAlign = TextAlign.Left,
-                    fontSize = 27   .sp,
-                    fontWeight = FontWeight.Bold
-                )
 
                 Box(modifier = Modifier.padding(vertical = 11.dp).fillMaxWidth(), contentAlignment = Alignment.Center){
                     Image(
@@ -106,49 +142,49 @@ fun ProfileScreen(navController: NavController){
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                    Text(
-                        text = "Full name",
-                        color = Color.Black,
-                        modifier = Modifier.padding(7.dp),
-                        textAlign = TextAlign.Left,
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
+                Text(
+                    text = "Full name",
+                    color = Color.Black,
+                    modifier = Modifier.padding(7.dp),
+                    textAlign = TextAlign.Left,
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
 
-                    SpecialTextField(hint = "Mert Adalı", modifier = Modifier.padding(0.1.dp))
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                    Text(
-                        text = "E-mail",
-                        color = Color.Black,
-                        textAlign = TextAlign.Left,
-                        modifier = Modifier.padding(7.dp),
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
-
-                    SpecialTextField(hint = "mertadali605@gmail.com", modifier = Modifier.padding(0.1.dp))
+                SpecialTextField(hint = "Mert Adalı", modifier = Modifier.padding(0.1.dp))
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                    Text(
-                        text = "Job",
-                        color = Color.Black,
-                        textAlign = TextAlign.Left,
-                        modifier = Modifier.padding(7.dp),
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
+                Text(
+                    text = "E-mail",
+                    color = Color.Black,
+                    textAlign = TextAlign.Left,
+                    modifier = Modifier.padding(7.dp),
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
 
-                    SpecialTextField(hint = "Developer",
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 4.dp))
+                SpecialTextField(hint = "mertadali605@gmail.com", modifier = Modifier.padding(0.1.dp))
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                    BirthDate()
+                Text(
+                    text = "Job",
+                    color = Color.Black,
+                    textAlign = TextAlign.Left,
+                    modifier = Modifier.padding(7.dp),
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+
+                SpecialTextField(hint = "Developer",
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp))
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                BirthDate()
 
                 SaveButton()
 

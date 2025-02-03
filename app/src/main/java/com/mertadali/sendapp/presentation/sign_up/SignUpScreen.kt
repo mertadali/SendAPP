@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -27,6 +29,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
@@ -46,7 +49,7 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = hilt
 
     val state = viewModel.state.collectAsState().value
     val context = LocalContext.current
-     val RC_SIGN_IN = 9001
+    val RC_SIGN_IN = 9001
 
 
 
@@ -72,7 +75,7 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = hilt
             try {
                 val account = task.getResult(ApiException::class.java)
                 account?.idToken?.let { token ->
-                   viewModel.handleGoogleSignUp(token)
+                    viewModel.handleGoogleSignUp(token)
                 }
             } catch (e: ApiException) {
                 Toast.makeText(context, "Google sign in failed: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -277,21 +280,21 @@ fun SpecialTextField(hint: String, onValueChange: (String) -> Unit){
 
 
 @Composable
-fun SpecialPasswordText(hint: String,onValueChange: (String) -> Unit){
-
+fun SpecialPasswordText(hint: String, onValueChange: (String) -> Unit){
     var text by remember {
         mutableStateOf("")
     }
     var isHintDisplayed by remember {
         mutableStateOf(hint != "")
     }
+    var passwordVisible by remember { mutableStateOf(false) }
 
     TextField(
         value = text,
         onValueChange = {
             text = it
             onValueChange(it)
-                        },
+        },
         maxLines = 1,
         singleLine = true,
         textStyle = TextStyle(color = Color.Black, textAlign = TextAlign.Start, fontSize = 14.sp),
@@ -299,17 +302,25 @@ fun SpecialPasswordText(hint: String,onValueChange: (String) -> Unit){
             unfocusedContainerColor = Color.White,
             cursorColor = Color.Black,
             focusedContainerColor = Color.Transparent),
-        visualTransformation = PasswordVisualTransformation(),
+        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+        trailingIcon = {
+            IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                Icon(
+                    imageVector = if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                    contentDescription = if (passwordVisible) "Hide password" else "Show password",
+                    tint = Color.Gray,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+        },
         modifier = Modifier
             .fillMaxWidth()
             .shadow(6.dp, RectangleShape)
             .height(51.dp)
             .onFocusChanged {
-                // kullanıcı tıkladıysa hint gözükmesin istiyoruz
                 isHintDisplayed = it.isFocused != true && text.isEmpty()
             },
-        placeholder = { Text(hint, color = Color.Gray, fontSize = 13.sp)}// Placeholder kullanımı
-
+        placeholder = { Text(hint, color = Color.Gray, fontSize = 13.sp)}
     )
 }
 

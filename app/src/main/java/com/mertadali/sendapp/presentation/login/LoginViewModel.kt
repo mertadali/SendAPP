@@ -16,27 +16,53 @@ import javax.inject.Inject
 import kotlin.math.log
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(private val signInUseCase: SignInUseCase, private val googleSignInUseCase: GoogleSignInUseCase,
- private val setLoggedInUseCase: SetLoggedInUseCase
+class LoginViewModel @Inject constructor(
+    private val signInUseCase: SignInUseCase,
+    private val googleSignInUseCase: GoogleSignInUseCase,
+    private val setLoggedInUseCase: SetLoggedInUseCase,
+    private val getCurrentUserUseCase: GetCurrentUserUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(LoginState())
     val state: StateFlow<LoginState> = _state.asStateFlow()
 
 
-    fun onEvent(event: LoginEvent){
-        when(event){
+    init {
+        viewModelScope.launch {
+            try {
+                val currentUser = getCurrentUserUseCase()
+                val isLoggedIn = setLoggedInUseCase.invokeIsLoggedIn()
+
+                _state.value = _state.value.copy(
+                    loggedInState = currentUser != null && isLoggedIn,
+                    keepMeLoggedInState = isLoggedIn,
+                    userState = if (isLoggedIn) currentUser else null
+                )
+            } catch (e: Exception) {
+                _state.value = _state.value.copy(
+                    errorMessageState = e.message ?: "Failed to check login state",
+                    loggedInState = false,
+                    keepMeLoggedInState = false
+                )
+            }
+        }
+    }
+
+
+    fun onEvent(event: LoginEvent) {
+        when (event) {
             is LoginEvent.EnterEmail -> {
                 _state.value = _state.value.copy(emailState = event.email)
 
             }
-            is LoginEvent.EnterPassword ->{
+
+            is LoginEvent.EnterPassword -> {
                 _state.value = _state.value.copy(passwordState = event.password)
 
             }
 
 
-           is  LoginEvent.ClickLogin -> {
+            is LoginEvent.ClickLogin -> {
                 login(_state.value.emailState, _state.value.passwordState)
             }
 
@@ -52,40 +78,52 @@ class LoginViewModel @Inject constructor(private val signInUseCase: SignInUseCas
             }
 
             is LoginEvent.IsLoggedIn -> {
-                isLoggedIn(isLoggedIn = event.isLoggedIn)
+                _state.value = _state.value.copy(keepMeLoggedInState = event.clicked)
 
             }
         }
     }
 
 
-
-    fun isLoggedIn(isLoggedIn : Boolean){
-        viewModelScope.launch {
-            setLoggedInUseCase.invoke(isLoggedIn)
-            _state.value = _state.value.copy(isLoadingState = true)
-
-
+    private fun login(email: String, password: String) {
+        if (email.isEmpty() || password.isEmpty()) {
+            _state.value = _state.value.copy(errorMessageState = "Email or Password is empty")
+            return
         }
-    }
-
-     fun login(email : String, password : String){
-         if(email.isEmpty() || password.isEmpty()) {
-             _state.value = _state.value.copy(errorMessageState = "Email or Password is empty")
-             return
-         }
         viewModelScope.launch {
-            signInUseCase.invoke( email,  password).collect{ response ->
-                when(response){
-                    is Response.Error -> {
-                        _state.value = _state.value.copy(isLoadingState = false, errorMessageState = response.message)
 
+            signInUseCase.invoke(email, password).collect { response ->
+                when (response) {
+                    is Response.Error -> {
+                       _state.value = _state.value.copy(isLoadingState = false, errorMessageState = response.message, loggedInState = false)
                     }
-                   is  Response.Loading -> {
-                        _state.value = _state.value.copy(isLoadingState = true, errorMessageState = null)
+
+                    is Response.Loading -> {
+                        _state.value = _state.value.copy(
+                            isLoadingState = true,
+                            errorMessageState = null
+                        )
                     }
-                 is Response.Success -> {
-                        _state.value = _state.value.copy(isLoadingState = false)
+
+                    is Response.Success -> {
+                        if (response.data.user != null) {
+                            _state.value = _state.value.copy(
+                                isLoadingState = false,
+                                userState = response.data.user,
+                                errorMessageState = null
+                            )
+
+                            if (_state.value.keepMeLoggedInState) {
+                                setLoggedInUseCase.invokeSetLoggedIn(true)
+                            }
+                            _state.value = _state.value.copy(loggedInState = true)
+                        } else {
+                            _state.value = _state.value.copy(
+                                isLoadingState = false,
+                                errorMessageState = "Authentication failed",
+                                loggedInState = false
+                            )
+                        }
                     }
 
                 }
@@ -94,27 +132,41 @@ class LoginViewModel @Inject constructor(private val signInUseCase: SignInUseCas
     }
 
 
-
     fun handleGoogleSignIn(idToken: String) {
         viewModelScope.launch {
             _state.value = _state.value.copy(isLoadingState = true)
             try {
                 googleSignInUseCase(idToken).collect { response ->
-
-                    when(response) {
+                    when (response) {
                         is Response.Success -> {
-                            _state.value = _state.value.copy(
-                                isLoadingState = false,
-                                userState = response.data.user
-                            )
+                            if (response.data.user != null) {
+                                _state.value = _state.value.copy(
+                                    isLoadingState = false,
+                                    userState = response.data.user,
+                                    errorMessageState = null
+                                )
 
+                                if (_state.value.keepMeLoggedInState) {
+                                    setLoggedInUseCase.invokeSetLoggedIn(true)
+                                }
+                                _state.value = _state.value.copy(loggedInState = true)
+                            } else {
+                                _state.value = _state.value.copy(
+                                    isLoadingState = false,
+                                    errorMessageState = "Google authentication failed",
+                                    loggedInState = false
+                                )
+                            }
                         }
+
                         is Response.Error -> {
                             _state.value = _state.value.copy(
                                 isLoadingState = false,
-                                errorMessageState = response.message
+                                errorMessageState = response.message,
+                                loggedInState = false
                             )
                         }
+
                         is Response.Loading -> {
                             _state.value = _state.value.copy(isLoadingState = true)
                         }
@@ -123,9 +175,13 @@ class LoginViewModel @Inject constructor(private val signInUseCase: SignInUseCas
             } catch (e: Exception) {
                 _state.value = _state.value.copy(
                     isLoadingState = false,
-                    errorMessageState = e.message ?: "Google sign in failed"
+                    errorMessageState = e.message ?: "Google sign in failed",
+                    loggedInState = false
                 )
             }
         }
     }
 }
+
+
+
