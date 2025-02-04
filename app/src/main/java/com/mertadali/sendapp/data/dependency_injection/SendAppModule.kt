@@ -12,6 +12,7 @@
     import com.mertadali.sendapp.data.repository.SendAppRepoImpl
     import com.mertadali.sendapp.domain.repository.FirebaseAuthRepository
     import com.mertadali.sendapp.domain.repository.SendAppRepository
+    import com.mertadali.sendapp.domain.use_case.ForgotPasswordUseCase
     import com.mertadali.sendapp.domain.use_case.GoogleSignInUseCase
     import dagger.Module
     import dagger.Provides
@@ -68,4 +69,11 @@
         fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
             return context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         }
+        @Provides
+        @Singleton
+        fun provideForgotPasswordUseCase(repository: FirebaseAuthRepository) : ForgotPasswordUseCase{
+            return ForgotPasswordUseCase(repository)
+
+        }
     }
+

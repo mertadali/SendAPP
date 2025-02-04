@@ -9,6 +9,7 @@
     import androidx.navigation.compose.composable
     import androidx.navigation.compose.rememberNavController
     import com.mertadali.sendapp.presentation.feed.FeedScreen
+    import com.mertadali.sendapp.presentation.forgot.ForgotScreen
     import com.mertadali.sendapp.presentation.login.LoginScreen
     import com.mertadali.sendapp.presentation.plans.add_plan.AddPlanScreen
     import com.mertadali.sendapp.presentation.plans.my_plans.MyPlansScreen
@@ -43,6 +44,8 @@
                             }
                             composable(route = Screen.ForgotScreen.route) {
                                 // Forgot Screen
+                                ForgotScreen(navController = navController)
+
 
                             }
                             composable(route = Screen.SignUpScreen.route) {

@@ -74,6 +74,7 @@ import com.mertadali.sendapp.presentation.Screen
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.ui.text.input.VisualTransformation
+import com.mertadali.sendapp.presentation.forgot.ForgotScreen
 
 @Composable
 fun LoginScreen(navController: NavController, viewModel: LoginViewModel = hiltViewModel()
@@ -333,8 +334,6 @@ fun SpecialForgotPassword(onClick : () -> Unit){
             .padding(vertical = 3.dp, horizontal = 7.dp),
         color = MaterialTheme.colorScheme.secondary,
         fontSize = 13.sp)
-
-
 
 }
 
