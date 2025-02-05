@@ -91,7 +91,6 @@ class LoginViewModel @Inject constructor(
             return
         }
         viewModelScope.launch {
-
             signInUseCase.invoke(email, password).collect { response ->
                 when (response) {
                     is Response.Error -> {

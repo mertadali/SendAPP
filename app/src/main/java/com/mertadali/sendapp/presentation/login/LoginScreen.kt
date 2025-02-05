@@ -54,7 +54,6 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
@@ -74,7 +73,6 @@ import com.mertadali.sendapp.presentation.Screen
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.ui.text.input.VisualTransformation
-import com.mertadali.sendapp.presentation.forgot.ForgotScreen
 
 @Composable
 fun LoginScreen(navController: NavController, viewModel: LoginViewModel = hiltViewModel()
@@ -89,6 +87,16 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = hiltVi
             .requestIdToken("181469459994-qrb0eq30b2bk2lph6ud6llv0ccnfoe1e.apps.googleusercontent.com")  // Replace with your actual web client ID
             .requestEmail()
             .build())
+    }
+
+
+    // Navigation after successful login
+    LaunchedEffect(key1 = state.loggedInState) {
+        if (state.loggedInState) {
+            navController.navigate(Screen.FeedScreen.route) {
+                popUpTo(Screen.LoginScreen.route) { inclusive = true }
+            }
+        }
     }
 
     DisposableEffect(Unit) {
@@ -116,6 +124,7 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = hiltVi
             }
         }
     }
+
 
     val backgroundImage = painterResource(id = R.drawable.background3)
 
@@ -195,7 +204,7 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = hiltVi
                     )
                     SpecialTextField(
                         hint = "Enter your Email",
-                        modifier = Modifier.padding(0.1.dp),
+                        value = state.emailState,
                         onValueChange = { viewModel.onEvent(LoginEvent.EnterEmail(it)) }
                     )
 
@@ -212,6 +221,7 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = hiltVi
                     )
                     SpecialPasswordText(
                         hint = "Enter Your Password",
+                        value = state.passwordState,
                         onValueChange = { viewModel.onEvent(LoginEvent.EnterPassword(it)) })
 
                     Spacer(modifier = Modifier.padding(2.dp))
@@ -220,8 +230,9 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = hiltVi
                     SpecialForgotPassword(onClick = { navController.navigate(Screen.ForgotScreen.route)})
 
 
-                    CheckBoxLoggedIn(onClick = {
-                        viewModel.onEvent(LoginEvent.IsLoggedIn(it))
+                    CheckBoxLoggedIn(
+                        isChecked = state.keepMeLoggedInState,
+                        onClick = { viewModel.onEvent(LoginEvent.IsLoggedIn(it))
                     })
 
 
@@ -238,12 +249,6 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = hiltVi
                         onClick = {
 
                             try {
-                                /*     googleSignInClient.signOut().addOnCompleteListener {
-                                         val signInIntent = googleSignInClient.signInIntent
-                                         launcher.launch(signInIntent)
-                                         googleSignInClient.signInIntent.extras?.clear()
-                                                                        }
-                                 */
                                 launcher.launch(googleSignInClient.signInIntent)
 
                             } catch (e: Exception) {
@@ -264,17 +269,7 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = hiltVi
                     if (state.isLoadingState) {
                         CircularProgressIndicator(modifier = Modifier.padding(top = 10.dp))
                     }
-                    /*   LaunchedEffect(key1 = state.isLoggedIn) {
-                           if (state.isLoggedIn) {
-                               navController.navigate(Screen.FeedScreen.route) {
-                                   popUpTo(Screen.LoginScreen.route) {
-                                       inclusive = true
-                                   }
-                               }
-                           }
-                       }
 
-                     */
                     val context = LocalContext.current
                     LaunchedEffect(key1 = state.errorMessageState) {
                         if (state.errorMessageState != null) {
@@ -289,7 +284,7 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel = hiltVi
 }
 
 @Composable
-fun SpecialTextField(hint: String, modifier: Modifier, onValueChange: (String) -> Unit){
+fun SpecialTextField(hint: String, value : String, onValueChange: (String) -> Unit){
 
     var text by remember {
         mutableStateOf("")
@@ -299,9 +294,8 @@ fun SpecialTextField(hint: String, modifier: Modifier, onValueChange: (String) -
     }
 
     TextField(
-        value = text,
+        value = value,
         onValueChange = {
-            text = it
             onValueChange(it)
         },
         maxLines = 1,
@@ -338,7 +332,7 @@ fun SpecialForgotPassword(onClick : () -> Unit){
 }
 
 @Composable
-fun SpecialPasswordText(hint: String, onValueChange: (String) -> Unit){
+fun SpecialPasswordText(hint: String, onValueChange: (String) -> Unit,value : String){
     var text by remember {
         mutableStateOf("")
     }
@@ -348,9 +342,8 @@ fun SpecialPasswordText(hint: String, onValueChange: (String) -> Unit){
     var passwordVisible by remember { mutableStateOf(false) }
 
     TextField(
-        value = text,
+        value =value ,
         onValueChange = {
-            text = it
             onValueChange(it)
         },
         maxLines = 1,
@@ -382,11 +375,8 @@ fun SpecialPasswordText(hint: String, onValueChange: (String) -> Unit){
 }
 
 @Composable
-fun CheckBoxLoggedIn(onClick: (Boolean) -> Unit){
+fun CheckBoxLoggedIn(onClick: (Boolean) -> Unit,isChecked : Boolean){
 
-    var checked by remember {
-        mutableStateOf(false)
-    }
 
     val scaleMultiplier = 0.9f //scale by 2x
 
@@ -397,7 +387,7 @@ fun CheckBoxLoggedIn(onClick: (Boolean) -> Unit){
 
         Checkbox(
             modifier = Modifier.scale(scaleMultiplier),
-            checked = checked,
+            checked = isChecked  ,
             onCheckedChange = { onClick(it)},
             colors = CheckboxDefaults.colors(checkedColor = Color.LightGray, uncheckedColor = Color.LightGray, checkmarkColor = Color.White))
 
@@ -420,7 +410,6 @@ fun LoginButton(onClick: () -> Unit){
         Text(text ="Login", color = Color.White, fontSize = 15.sp, fontWeight = FontWeight.SemiBold )
 
     }
-
 }
 
 @Composable
