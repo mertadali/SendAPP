@@ -3,7 +3,6 @@ package com.mertadali.sendapp.presentation.feed
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -47,7 +46,7 @@ fun FeedScreen(navController: NavController) {
 
 
 
-    Scaffold(
+    Scaffold( modifier = Modifier.padding(bottom = 6.dp),
         bottomBar = {
             BottomNavBar(
                 navController = navController,
@@ -145,7 +144,6 @@ fun BottomNavBar(navController: NavController, items: List<Screen>) {
             .fillMaxWidth()
             .clip(shape = CircleShape)
             .alpha(0.93f)
-            .padding(horizontal = 2.dp)
             .blur(0.1.dp)){
         items.forEach { screen ->
             val isSelected = currentRoute == screen.route

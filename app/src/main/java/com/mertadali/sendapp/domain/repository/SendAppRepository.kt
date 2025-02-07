@@ -15,5 +15,7 @@ interface SendAppRepository {
     suspend fun saveProfileToRoomUseCase(fullName :String, email : String, job : String, imageUri : Uri)
 
 
+
+
     
 }
