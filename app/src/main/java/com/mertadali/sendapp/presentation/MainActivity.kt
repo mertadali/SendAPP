@@ -70,6 +70,7 @@
                                 // Add Plans Screen
                                 AddPlanScreen(navController = navController)
                             }
+
                         }
                     }
                 }

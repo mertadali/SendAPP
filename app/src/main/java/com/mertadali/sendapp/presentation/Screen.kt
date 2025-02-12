@@ -17,6 +17,7 @@ sealed class Screen(val route : String ,val icon: ImageVector? = null){
     data object ProfileScreen : Screen("profile_screen",Icons.Filled.Person)
     data object MyPlansScreen : Screen("my_plans_screen", Icons.AutoMirrored.Filled.List)
     data object AddPlansScreen : Screen("add_plans_screen",Icons.Filled.Add)
+    data object PermissionScreen : Screen("permissions")
 
 }
 

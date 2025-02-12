@@ -1,6 +1,5 @@
 package com.mertadali.sendapp.data.repository
 
-import android.content.Context
 import android.content.SharedPreferences
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
@@ -8,7 +7,6 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.mertadali.sendapp.domain.repository.FirebaseAuthRepository
 import com.mertadali.sendapp.util.Response
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await

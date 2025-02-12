@@ -52,9 +52,12 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = hilt
     val backgroundImage = painterResource(id = R.drawable.background3)
 
 
+
+
+
+
     val state = viewModel.state.collectAsState().value
     val context = LocalContext.current
-
 
 
     val googleSignInClient = remember {
@@ -69,6 +72,8 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = hilt
             googleSignInClient.signOut()
         }
     }
+
+
 
 
     val launcher = rememberLauncherForActivityResult(
@@ -158,6 +163,7 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = hilt
                     SpecialTextField(hint = "Mert Adalı", onValueChange = { viewModel.onEvent(SignUpEvent.EnterFullName(it)) })
 
 
+
                     Text(
                         text = "E-mail",
                         modifier = Modifier.padding(7.dp),
@@ -226,6 +232,8 @@ fun SignUpScreen(navController: NavController, viewModel: SignUpViewModel = hilt
                             }
                         }
                     }
+
+
 
                 }
             }
